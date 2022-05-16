@@ -1,18 +1,26 @@
 package com.cksql.parser.common;
 
-import lombok.AllArgsConstructor;
+import com.cksql.parser.type.DataType;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import static com.cksql.parser.util.ClickHouseTypeUtil.toDataType;
 
 /** column extra info. */
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class ColumnExtra {
 
-    private String name;
+    private final String name;
 
-    private Long tableId;
+    private final Long tableId;
 
-    private String originType;
+    private final String originType;
+
+    private final DataType dataType;
+
+    public ColumnExtra(String name, Long tableId, String originType) {
+        this.name = name;
+        this.tableId = tableId;
+        this.originType = originType;
+        this.dataType = toDataType(name, originType);
+    }
 }

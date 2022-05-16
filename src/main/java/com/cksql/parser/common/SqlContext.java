@@ -1,8 +1,5 @@
-package com.cksql.parser.model;
+package com.cksql.parser.common;
 
-import com.cksql.parser.common.ColumnExtra;
-import com.cksql.parser.common.Preconditions;
-import com.cksql.parser.common.TableExtra;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +17,7 @@ public class SqlContext {
 
     private Map<Long, Map<String, ColumnExtra>> tableColumnMap;
 
-    /** Builder for {@link SqlContext}. */
+    /** Builder for {@link SqlContext}. TODO: throw exception if exists. */
     public static class Builder {
 
         private final Map<Long, TableExtra> tableMap = new HashMap<>();

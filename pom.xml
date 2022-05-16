@@ -20,6 +20,7 @@
 		<commons-lang3.version>3.12.0</commons-lang3.version>
 		<jackson.version>2.13.2.2</jackson.version>
 		<jsr305.version>3.0.2</jsr305.version>
+		<clickhouse-jdbc.version>0.3.1</clickhouse-jdbc.version>
 		<maven-checkstyle-plugin.version>2.17</maven-checkstyle-plugin.version>
 		<spotless-maven-plugin.version>2.4.2</spotless-maven-plugin.version>
 		<maven-shade-plugin.version>3.2.1</maven-shade-plugin.version>
@@ -53,6 +54,21 @@
 			<artifactId>jsr305</artifactId>
 			<version>${jsr305.version}</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>ru.yandex.clickhouse</groupId>
+			<artifactId>clickhouse-jdbc</artifactId>
+			<version>${clickhouse-jdbc.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.fasterxml.jackson.core</groupId>
+					<artifactId>jackson-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.fasterxml.jackson.core</groupId>
+					<artifactId>jackson-databind</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 

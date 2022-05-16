@@ -1,4 +1,17 @@
 package com.cksql.parser.type;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 /** Array data type. */
-public class ArrayDataType extends DataType {}
+@Data
+@EqualsAndHashCode(callSuper = true)
+public class ArrayDataType extends DataType {
+
+    private final DataType elementDataType;
+
+    public ArrayDataType(DataType elementDataType) {
+        super(LogicalType.ARRAY);
+        this.elementDataType = elementDataType;
+    }
+}

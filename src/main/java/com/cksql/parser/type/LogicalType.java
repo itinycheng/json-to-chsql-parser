@@ -13,13 +13,17 @@ public enum LogicalType {
 
     STRING(SINGLE_QUOTE, "STRING"),
 
-    LIST(EMPTY, "ARRAY"),
+    ARRAY(EMPTY, "ARRAY"),
 
     MAP(EMPTY, "MAP"),
 
     INT(EMPTY, "INTEGER"),
 
-    FLOAT(EMPTY, "FLOAT");
+    FLOAT(EMPTY, "FLOAT"),
+
+    DECIMAL(EMPTY, "decimal"),
+
+    DATETIME(EMPTY, "datetime");
 
     public final String quote;
 

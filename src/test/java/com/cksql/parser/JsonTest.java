@@ -13,4 +13,10 @@ public class JsonTest {
         SqlLiteral literal = new ObjectMapper().readValue("{\"value\": [1,2]}", SqlLiteral.class);
         System.out.println(literal);
     }
+
+    @Test
+    public void test1() {
+        String format = String.format("args: %s, %s", new Object[] {"a", "b"});
+        System.out.println(format);
+    }
 }

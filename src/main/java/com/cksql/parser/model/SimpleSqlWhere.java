@@ -1,12 +1,13 @@
 package com.cksql.parser.model;
 
+import com.cksql.parser.common.SqlContext;
 import com.cksql.parser.snippet.SqlExpression;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-/** Simple sql where. */
+/** Simple sql where. TODO: operands not null, 1=< length <= 2 */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,15 +16,17 @@ public class SimpleSqlWhere extends SqlWhere {
 
     private SqlExpression operator;
 
-    private SqlColumn column;
-
-    private String[] operands;
+    private SqlNode[] operands;
 
     public String toSQL(SqlContext context) {
-        SqlExpression operatorExpr = operator;
-        // fill operands to object array
-        Object[] formatted = new Object[this.getOperands().length + 1];
-        formatted[0] = column.toSQL(null);
-        return null;
+        SqlColumn sqlColumn = operands[0].unwrap(SqlColumn.class);
+        SqlLiteral sqlLiteral = operands.length == 2 ? operands[1].unwrap(SqlLiteral.class) : null;
+        Object[] formatted = new Object[operands.length];
+        formatted[0] = sqlColumn.toSQL(context);
+        if (sqlLiteral != null) {
+            formatted[1] = sqlLiteral.toSQL(sqlColumn.getDataType(context), operator.enableQuoting);
+        }
+        // replace variable in sql expression
+        return String.format(operator.expression, formatted);
     }
 }

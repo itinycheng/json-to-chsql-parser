@@ -32,7 +32,7 @@ public class SqlWhere {
         Set<SqlColumn> sqlNodeSet = new HashSet<>();
         if (this instanceof SimpleSqlWhere) {
             SimpleSqlWhere simpleSqlWhere = (SimpleSqlWhere) this;
-            SqlColumn column = simpleSqlWhere.getColumn();
+            SqlColumn column = simpleSqlWhere.getOperands()[0].unwrap(SqlColumn.class);
             sqlNodeSet.add(column);
         } else if (this instanceof CompositeSqlWhere) {
             CompositeSqlWhere compositeSqlWhere = (CompositeSqlWhere) this;

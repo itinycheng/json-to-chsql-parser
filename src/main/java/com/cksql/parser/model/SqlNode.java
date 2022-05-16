@@ -1,5 +1,6 @@
 package com.cksql.parser.model;
 
+import com.cksql.parser.common.SqlContext;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.AllArgsConstructor;
@@ -22,11 +23,13 @@ import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 })
 public class SqlNode {
 
-    private String ident;
-
     private String type;
 
-    public boolean isValid() {
+    public boolean isValid(SqlContext context) {
         return true;
+    }
+
+    public <T extends SqlNode> T unwrap(Class<T> clazz) {
+        return clazz.isInstance(this) ? clazz.cast(this) : null;
     }
 }

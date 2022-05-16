@@ -1,5 +1,6 @@
 package com.cksql.parser.model;
 
+import com.cksql.parser.common.SqlContext;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,9 +20,9 @@ public class SqlFunction extends SqlNode {
     private List<SqlNode> operands;
 
     @Override
-    public boolean isValid() {
+    public boolean isValid(SqlContext context) {
         if (operands == null || operands.size() == 0) {
-            return super.isValid();
+            return super.isValid(context);
         }
 
         boolean isValidOperands =
@@ -31,10 +32,10 @@ public class SqlFunction extends SqlNode {
                                     if (sqlNode instanceof SqlTable) {
                                         return false;
                                     } else {
-                                        return sqlNode.isValid();
+                                        return sqlNode.isValid(context);
                                     }
                                 });
 
-        return isValidOperands && super.isValid();
+        return isValidOperands && super.isValid(context);
     }
 }
