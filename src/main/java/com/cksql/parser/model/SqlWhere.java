@@ -1,5 +1,6 @@
 package com.cksql.parser.model;
 
+import com.cksql.parser.common.SqlContext;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.AllArgsConstructor;
@@ -24,23 +25,29 @@ import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
     @JsonSubTypes.Type(value = CompositeSqlWhere.class, name = "composite"),
     @JsonSubTypes.Type(value = SimpleSqlWhere.class, name = "simple")
 })
-public class SqlWhere {
+public abstract class SqlWhere {
 
     private String type;
 
-    public List<SqlColumn> exhaustiveSqlNodes() {
+    public abstract String toSQL(SqlContext context);
+
+    /** TODO SqlFunction. */
+    public List<SqlColumn> getAllColumns() {
         Set<SqlColumn> sqlNodeSet = new HashSet<>();
         if (this instanceof SimpleSqlWhere) {
             SimpleSqlWhere simpleSqlWhere = (SimpleSqlWhere) this;
-            SqlColumn column = simpleSqlWhere.getOperands()[0].unwrap(SqlColumn.class);
-            sqlNodeSet.add(column);
+            for (SqlNode sqlNode : simpleSqlWhere.getOperands()) {
+                if (sqlNode instanceof SqlColumn) {
+                    sqlNodeSet.add(sqlNode.unwrap(SqlColumn.class));
+                }
+            }
         } else if (this instanceof CompositeSqlWhere) {
             CompositeSqlWhere compositeSqlWhere = (CompositeSqlWhere) this;
-            List<SqlColumn> identifiers =
+            List<SqlColumn> columns =
                     compositeSqlWhere.getConditions().stream()
-                            .flatMap(sqlWhere -> sqlWhere.exhaustiveSqlNodes().stream())
+                            .flatMap(sqlWhere -> sqlWhere.getAllColumns().stream())
                             .collect(Collectors.toList());
-            sqlNodeSet.addAll(identifiers);
+            sqlNodeSet.addAll(columns);
         }
         return new ArrayList<>(sqlNodeSet);
     }

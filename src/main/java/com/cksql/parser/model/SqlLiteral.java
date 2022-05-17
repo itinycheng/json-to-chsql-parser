@@ -24,6 +24,16 @@ public class SqlLiteral extends SqlNode {
 
     private String[] values;
 
+    @Override
+    public String ident() {
+        throw new UnsupportedOperationException("The sql literal does not require ident.");
+    }
+
+    @Override
+    public boolean isValid(SqlContext context) {
+        return ArrayUtils.isNotEmpty(values) && super.isValid(context);
+    }
+
     public String toSQL(DataType dataType, boolean isQuoteEnabled) {
         LogicalType logicalType = dataType.getLogicalType();
         return Arrays.stream(values)
@@ -37,10 +47,5 @@ public class SqlLiteral extends SqlNode {
                             }
                         })
                 .collect(joining(COMMA));
-    }
-
-    @Override
-    public boolean isValid(SqlContext context) {
-        return ArrayUtils.isNotEmpty(values) && super.isValid(context);
     }
 }

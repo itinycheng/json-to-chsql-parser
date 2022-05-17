@@ -9,14 +9,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.math.NumberUtils;
 
 import java.util.Map;
 
 import static com.cksql.parser.common.Constant.DOT;
 import static com.cksql.parser.common.Constant.EMPTY;
+import static com.cksql.parser.common.Constant.UNDERSCORE;
+import static com.cksql.parser.util.SqlUtil.tableIdent;
 
-/** Sql identifier. */
+/** Sql column. */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,32 +28,12 @@ public class SqlColumn extends SqlNode {
 
     private String[] names;
 
-    public String toSQL(SqlContext context) {
-        DataType dataType = getDataType(context);
-        String column;
-        if (names.length == 1) {
-            column = names[0];
-        } else if (names.length == 2) {
-            LogicalType logicalType = dataType.getLogicalType();
-            String key = String.join(EMPTY, logicalType.quote, names[1], logicalType.quote);
-            column = String.join(EMPTY, names[0], "[", key, "]");
-        } else {
-            throw new RuntimeException("Length of names is not more than 2.");
-        }
-
-        return String.join(EMPTY, qualifier, DOT, column);
-    }
-
-    public DataType getDataType(SqlContext context) {
-        long tableId = Long.parseLong(qualifier);
-        Map<String, ColumnExtra> columnExtraMap = context.getTableColumnMap().get(tableId);
-        ColumnExtra columnExtra = columnExtraMap.get(names[0]);
-        DataType dataType = columnExtra.getDataType();
-        if (dataType instanceof MapDataType) {
-            return ((MapDataType) dataType).getKeyDataType();
-        } else {
-            return dataType;
-        }
+    @Override
+    public String ident() {
+        String[] formatted = new String[names.length + 1];
+        formatted[0] = tableIdent(qualifier);
+        System.arraycopy(names, 0, formatted, 1, names.length);
+        return String.join(UNDERSCORE, formatted);
     }
 
     @Override
@@ -67,6 +48,30 @@ public class SqlColumn extends SqlNode {
             return false;
         }
 
-        return NumberUtils.isDigits(qualifier) && super.isValid(context);
+        return super.isValid(context);
+    }
+
+    public String toSQL(SqlContext context) {
+        DataType dataType = getDataType(context);
+        String column = names[0];
+        if (names.length == 2) {
+            LogicalType logicalType = dataType.getLogicalType();
+            String key = String.join(EMPTY, logicalType.quote, names[1], logicalType.quote);
+            column = String.join(EMPTY, column, "[", key, "]");
+        }
+
+        String tableIdent = tableIdent(qualifier);
+        return String.join(EMPTY, tableIdent, DOT, column);
+    }
+
+    public DataType getDataType(SqlContext context) {
+        Map<String, ColumnExtra> columnExtraMap = context.getTableColumnMap().get(qualifier);
+        ColumnExtra columnExtra = columnExtraMap.get(names[0]);
+        DataType dataType = columnExtra.getDataType();
+        if (dataType instanceof MapDataType) {
+            return ((MapDataType) dataType).getKeyDataType();
+        } else {
+            return dataType;
+        }
     }
 }

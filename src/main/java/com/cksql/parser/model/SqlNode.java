@@ -21,9 +21,11 @@ import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
     @JsonSubTypes.Type(value = SqlLiteral.class, name = "literal"),
     @JsonSubTypes.Type(value = SqlFunction.class, name = "function")
 })
-public class SqlNode {
+public abstract class SqlNode {
 
     private String type;
+
+    public abstract String ident();
 
     public boolean isValid(SqlContext context) {
         return true;

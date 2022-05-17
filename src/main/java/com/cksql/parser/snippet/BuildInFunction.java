@@ -1,5 +1,7 @@
 package com.cksql.parser.snippet;
 
+import java.util.Arrays;
+
 import static com.cksql.parser.snippet.FunctionType.AGG_FUNC;
 import static com.cksql.parser.snippet.FunctionType.COM_FUNC;
 
@@ -47,5 +49,19 @@ public enum BuildInFunction {
         this.name = name;
         this.format = format;
         this.type = type;
+    }
+
+    public boolean isAggFunc() {
+        return type == AGG_FUNC;
+    }
+
+    public static BuildInFunction of(final String name) {
+        return Arrays.stream(values())
+                .filter(expr -> expr.name.equalsIgnoreCase(name))
+                .findFirst()
+                .orElseThrow(
+                        () ->
+                                new RuntimeException(
+                                        "can not find a suitable sql function, name:" + name));
     }
 }

@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /** sql order by. */
 @Data
@@ -15,5 +17,10 @@ public class SqlOrderBy {
 
     private SqlExpression type;
 
-    private List<SqlColumn> items;
+    private List<SqlNode> items;
+
+    public List<SqlColumn> getAllColumns() {
+        Set<SqlColumn> sqlNodeSet = new HashSet<>();
+        return null;
+    }
 }

@@ -6,7 +6,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static com.cksql.parser.common.Constant.UNDERSCORE;
 
 /** SQL function. */
 @Data
@@ -18,6 +21,18 @@ public class SqlFunction extends SqlNode {
     private String name;
 
     private List<SqlNode> operands;
+
+    @Override
+    public String ident() {
+        List<String> subIdentList = new ArrayList<>(operands.size() + 1);
+        subIdentList.add(name.toLowerCase());
+        for (SqlNode sqlNode : operands) {
+            if (sqlNode instanceof SqlColumn || sqlNode instanceof SqlFunction) {
+                subIdentList.add(sqlNode.ident());
+            }
+        }
+        return String.join(UNDERSCORE, subIdentList);
+    }
 
     @Override
     public boolean isValid(SqlContext context) {
@@ -37,5 +52,17 @@ public class SqlFunction extends SqlNode {
                                 });
 
         return isValidOperands && super.isValid(context);
+    }
+
+    public List<SqlColumn> getAllColumns() {
+        List<SqlColumn> columns = new ArrayList<>();
+        for (SqlNode sqlNode : operands) {
+            if (sqlNode instanceof SqlFunction) {
+                columns.addAll(sqlNode.unwrap(SqlFunction.class).getAllColumns());
+            } else if (sqlNode instanceof SqlColumn) {
+                columns.add(sqlNode.unwrap(SqlColumn.class));
+            }
+        }
+        return columns;
     }
 }
