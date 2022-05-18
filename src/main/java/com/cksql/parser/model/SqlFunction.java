@@ -1,6 +1,8 @@
 package com.cksql.parser.model;
 
+import com.cksql.parser.common.LiteralRelated;
 import com.cksql.parser.common.SqlContext;
+import com.cksql.parser.snippet.BuildInFunction;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -35,34 +37,47 @@ public class SqlFunction extends SqlNode {
     }
 
     @Override
-    public boolean isValid(SqlContext context) {
-        if (operands == null || operands.size() == 0) {
-            return super.isValid(context);
-        }
-
-        boolean isValidOperands =
-                operands.stream()
-                        .allMatch(
-                                sqlNode -> {
-                                    if (sqlNode instanceof SqlTable) {
-                                        return false;
-                                    } else {
-                                        return sqlNode.isValid(context);
-                                    }
-                                });
-
-        return isValidOperands && super.isValid(context);
-    }
-
-    public List<SqlColumn> getAllColumns() {
+    public List<SqlColumn> getColumns() {
         List<SqlColumn> columns = new ArrayList<>();
         for (SqlNode sqlNode : operands) {
-            if (sqlNode instanceof SqlFunction) {
-                columns.addAll(sqlNode.unwrap(SqlFunction.class).getAllColumns());
-            } else if (sqlNode instanceof SqlColumn) {
-                columns.add(sqlNode.unwrap(SqlColumn.class));
-            }
+            columns.addAll(sqlNode.getColumns());
         }
         return columns;
+    }
+
+    @Override
+    public boolean isValid(SqlContext context) {
+        if (operands == null || operands.size() == 0) {
+            return true;
+        }
+
+        return operands.stream()
+                .allMatch(
+                        sqlNode -> {
+                            if (sqlNode instanceof SqlTable) {
+                                return false;
+                            } else {
+                                return sqlNode.isValid(context);
+                            }
+                        });
+    }
+
+    // TODO: currently, only support extract dataType from column.
+    @Override
+    public String toSQL(SqlContext context, Object... relation) {
+        BuildInFunction function = BuildInFunction.of(name);
+        SqlColumn sqlColumn =
+                operands.stream()
+                        .filter(sqlNode -> sqlNode instanceof SqlColumn)
+                        .map(sqlNode -> sqlNode.unwrap(SqlColumn.class))
+                        .findFirst()
+                        .orElseThrow(() -> new RuntimeException("SqlColumn not found"));
+        LiteralRelated related = new LiteralRelated(sqlColumn.getDataType(context), true);
+        List<String> operandList = new ArrayList<>();
+        for (SqlNode sqlNode : operands) {
+            operandList.add(sqlNode.toSQL(context, related));
+        }
+
+        return String.format(function.format, operandList.toArray());
     }
 }

@@ -31,15 +31,12 @@ public abstract class SqlWhere {
 
     public abstract String toSQL(SqlContext context);
 
-    /** TODO SqlFunction. */
     public List<SqlColumn> getAllColumns() {
         Set<SqlColumn> sqlNodeSet = new HashSet<>();
         if (this instanceof SimpleSqlWhere) {
             SimpleSqlWhere simpleSqlWhere = (SimpleSqlWhere) this;
             for (SqlNode sqlNode : simpleSqlWhere.getOperands()) {
-                if (sqlNode instanceof SqlColumn) {
-                    sqlNodeSet.add(sqlNode.unwrap(SqlColumn.class));
-                }
+                sqlNodeSet.addAll(sqlNode.getColumns());
             }
         } else if (this instanceof CompositeSqlWhere) {
             CompositeSqlWhere compositeSqlWhere = (CompositeSqlWhere) this;

@@ -9,6 +9,8 @@ import static java.util.stream.Collectors.toMap;
 
 /** logical types. */
 public enum LogicalType {
+    ANY(EMPTY, "any"),
+
     NUMBER(EMPTY, "UNDEFINED"),
 
     STRING(SINGLE_QUOTE, "STRING"),

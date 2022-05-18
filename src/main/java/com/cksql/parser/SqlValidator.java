@@ -1,17 +1,16 @@
 package com.cksql.parser;
 
+import com.cksql.parser.common.SqlContext;
 import com.cksql.parser.model.SqlSelect;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 
 /** sql validate. */
-@Data
 @AllArgsConstructor
 public class SqlValidator {
 
-    private final SqlSelect select;
+    private final SqlContext context;
 
-    public boolean validate() {
+    public boolean validate(SqlSelect sqlSelect) {
         return true;
     }
 }

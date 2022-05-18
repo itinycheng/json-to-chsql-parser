@@ -3,7 +3,7 @@ package com.cksql.parser.common;
 import com.cksql.parser.type.DataType;
 import lombok.Data;
 
-import static com.cksql.parser.util.ClickHouseTypeUtil.toDataType;
+import static com.cksql.parser.util.ClickHouseUtil.toDataType;
 
 /** column extra info. */
 @Data

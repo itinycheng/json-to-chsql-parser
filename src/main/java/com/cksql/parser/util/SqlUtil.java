@@ -1,7 +1,6 @@
 package com.cksql.parser.util;
 
 import com.cksql.parser.model.SqlColumn;
-import com.cksql.parser.model.SqlFunction;
 import com.cksql.parser.model.SqlNode;
 import com.cksql.parser.model.SqlOrderBy;
 import com.cksql.parser.model.SqlSelect;
@@ -15,12 +14,9 @@ public class SqlUtil {
 
     public static List<SqlColumn> extractAllColumns(SqlSelect sqlSelect) {
         List<SqlColumn> allColumns = new ArrayList<>();
+
         for (SqlNode sqlNode : sqlSelect.getSelect()) {
-            if (sqlNode instanceof SqlColumn) {
-                allColumns.add(sqlNode.unwrap(SqlColumn.class));
-            } else if (sqlNode instanceof SqlFunction) {
-                allColumns.addAll(sqlNode.unwrap(SqlFunction.class).getAllColumns());
-            }
+            allColumns.addAll(sqlNode.getColumns());
         }
 
         SqlWhere where = sqlSelect.getWhere();

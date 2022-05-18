@@ -1,7 +1,6 @@
 package com.cksql.parser.snippet;
 
 import java.util.Arrays;
-import java.util.List;
 
 /** sql expression. */
 public enum SqlExpression {
@@ -23,10 +22,11 @@ public enum SqlExpression {
     EXISTS(" EXISTS (%s) ", true),
     BETWEEN(" %s BETWEEN %s AND %s ", true),
     ASC(" ORDER BY %s ASC ", true),
-    DESC(" ORDER BY %s DESC ", true);
+    DESC(" ORDER BY %s DESC ", true),
 
-    public static final List<SqlExpression> SUPPORT_MULTI_INPUT_PARAMETER =
-            Arrays.asList(IN, NOT_IN);
+    /** Array only. */
+    HAS_ANY(" hasAny(%s, [%s]) ", true),
+    HAS_ALL(" hasAll(%s, [%s]) ", true);
 
     public final String expression;
 
@@ -42,9 +42,5 @@ public enum SqlExpression {
                 .filter(expr -> expr.name().equalsIgnoreCase(name))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("can not find a suitable sql expression."));
-    }
-
-    public boolean isSupportMultiParameter() {
-        return SUPPORT_MULTI_INPUT_PARAMETER.stream().anyMatch(this::equals);
     }
 }

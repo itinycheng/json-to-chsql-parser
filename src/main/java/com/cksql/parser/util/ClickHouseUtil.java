@@ -12,7 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /** Type utils. */
-public class ClickHouseTypeUtil {
+public class ClickHouseUtil {
 
     private static final Pattern INTERNAL_TYPE_PATTERN = Pattern.compile(".*?\\((?<type>.*)\\)");
 

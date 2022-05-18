@@ -1,12 +1,15 @@
 package com.cksql.parser.model;
 
+import com.cksql.parser.common.LiteralRelated;
 import com.cksql.parser.common.SqlContext;
+import com.cksql.parser.snippet.BuildInFunction;
 import com.cksql.parser.snippet.SqlExpression;
 import com.cksql.parser.type.DataType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -32,6 +35,7 @@ public class SimpleSqlWhere extends SqlWhere {
 
     private SqlNode[] operands;
 
+    // TODO: sqlFunction.
     @Override
     public String toSQL(SqlContext context) {
         if (ArrayUtils.isEmpty(operands)) {
@@ -51,33 +55,38 @@ public class SimpleSqlWhere extends SqlWhere {
                                 () ->
                                         new RuntimeException(
                                                 "No sql column in operands of SimpleSqlWhere"));
-        SqlColumn sqlColumn = operandMap.remove(firstSqlColumnIdx).unwrap(SqlColumn.class);
-        DataType dataType = sqlColumn.getDataType(context);
+        SqlNode sqlNode = operandMap.remove(firstSqlColumnIdx);
+        DataType dataType = parseDataType(sqlNode, context);
 
         Map<Integer, String> orderedMap = new TreeMap<>(Comparator.naturalOrder());
-        orderedMap.put(firstSqlColumnIdx, sqlColumn.toSQL(context));
+        orderedMap.put(firstSqlColumnIdx, sqlNode.toSQL(context));
         for (Map.Entry<Integer, SqlNode> entry : operandMap.entrySet()) {
-            orderedMap.put(entry.getKey(), toSQL(entry.getValue(), context, dataType));
+            SqlNode value = entry.getValue();
+            Object related = null;
+            if (value instanceof SqlLiteral) {
+                related = new LiteralRelated(dataType, operator.enableQuoting);
+            }
+            String sql = value.toSQL(context, related);
+            orderedMap.put(entry.getKey(), sql);
         }
 
         // replace variable in sql expression
         return String.format(operator.expression, orderedMap.values().toArray());
     }
 
-    // TODO: sqlFunction.
     private boolean containsSqlColumn(SqlNode sqlNode) {
-        return sqlNode instanceof SqlColumn;
+        return CollectionUtils.isNotEmpty(sqlNode.getColumns());
     }
 
-    private String toSQL(SqlNode sqlNode, SqlContext context, DataType dataType) {
+    public DataType parseDataType(SqlNode sqlNode, SqlContext context) {
         if (sqlNode instanceof SqlColumn) {
-            return sqlNode.unwrap(SqlColumn.class).toSQL(context);
-        } else if (sqlNode instanceof SqlLiteral) {
-            return sqlNode.unwrap(SqlLiteral.class).toSQL(dataType, operator.enableQuoting);
+            return ((SqlColumn) sqlNode).getDataType(context);
         } else if (sqlNode instanceof SqlFunction) {
-            throw new RuntimeException("Unsupported sql function for now.");
+            SqlFunction sqlFunction = sqlNode.unwrap(SqlFunction.class);
+            BuildInFunction function = BuildInFunction.of(sqlFunction.getName());
+            return function.resultType;
         }
 
-        throw new RuntimeException("Unknown sql node: " + sqlNode);
+        throw new RuntimeException("Only columns or functions have data types.");
     }
 }

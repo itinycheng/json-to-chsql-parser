@@ -1,5 +1,6 @@
 package com.cksql.parser;
 
+import com.cksql.parser.common.Preconditions;
 import com.cksql.parser.common.SqlContext;
 import com.cksql.parser.common.TableExtra;
 import com.cksql.parser.model.SqlColumn;
@@ -23,22 +24,31 @@ import static com.cksql.parser.util.SqlUtil.extractAllColumns;
  */
 public class SqlParser {
 
-    public String parseQuery(SqlSelect origin, SqlContext context) {
+    private final SqlContext context;
+
+    private final SqlValidator validator;
+
+    public SqlParser(SqlContext context) {
+        this.context = Preconditions.checkNotNull(context);
+        this.validator = new SqlValidator(context);
+    }
+
+    public String parseQuery(SqlSelect origin) {
         List<SqlTable> sqlTables = extractFrom(origin, context);
         List<SqlNode> groupBy = extractGroupBy(origin.getSelect());
 
         SqlSelect sqlSelect = new SqlSelect();
         sqlSelect.setSelect(origin.getSelect());
         sqlSelect.setFrom(sqlTables);
-        sqlSelect.setWhere(sqlSelect.getWhere());
+        sqlSelect.setWhere(origin.getWhere());
         sqlSelect.setGroupBy(groupBy);
-        sqlSelect.setOrderBy(sqlSelect.getOrderBy());
-        sqlSelect.setLimit(sqlSelect.getLimit());
+        sqlSelect.setOrderBy(origin.getOrderBy());
+        sqlSelect.setLimit(origin.getLimit());
+
+        validator.validate(sqlSelect);
 
         SqlContext cloneContext = context.clone();
         cloneContext.setSqlSelect(sqlSelect);
-
-        new SqlValidator(sqlSelect).validate();
         return sqlSelect.toSQL(cloneContext);
     }
 

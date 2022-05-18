@@ -10,6 +10,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import static com.cksql.parser.common.Constant.DOT;
@@ -37,6 +39,11 @@ public class SqlColumn extends SqlNode {
     }
 
     @Override
+    public List<SqlColumn> getColumns() {
+        return Collections.singletonList(this);
+    }
+
+    @Override
     public boolean isValid(SqlContext context) {
         if (names == null || names.length > 2) {
             return false;
@@ -48,10 +55,11 @@ public class SqlColumn extends SqlNode {
             return false;
         }
 
-        return super.isValid(context);
+        return true;
     }
 
-    public String toSQL(SqlContext context) {
+    @Override
+    public String toSQL(SqlContext context, Object... relation) {
         DataType dataType = getDataType(context);
         String column = names[0];
         if (names.length == 2) {
