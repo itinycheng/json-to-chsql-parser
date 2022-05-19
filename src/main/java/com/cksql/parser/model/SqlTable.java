@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,7 +38,9 @@ public class SqlTable extends SqlNode {
 
     @Override
     public boolean isValid(SqlContext context) {
-        return true;
+        return StringUtils.isNoneBlank(id)
+                && StringUtils.isNoneBlank(database)
+                && StringUtils.isNoneBlank(name);
     }
 
     public String toSQL(SqlContext sqlContext, Object... relation) {

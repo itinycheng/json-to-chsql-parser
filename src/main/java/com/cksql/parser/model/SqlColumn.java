@@ -50,9 +50,8 @@ public class SqlColumn extends SqlNode {
         }
 
         DataType dataType = getDataType(context);
-        if (dataType instanceof MapDataType && names.length != 2) {
-            // new RuntimeException("The map data needs to specify a key.");
-            return false;
+        if (dataType instanceof MapDataType) {
+            return names.length == 2;
         }
 
         return true;
@@ -60,9 +59,9 @@ public class SqlColumn extends SqlNode {
 
     @Override
     public String toSQL(SqlContext context, Object... relation) {
-        DataType dataType = getDataType(context);
         String column = names[0];
         if (names.length == 2) {
+            DataType dataType = getMapKeyDataType(context);
             LogicalType logicalType = dataType.getLogicalType();
             String key = String.join(EMPTY, logicalType.quote, names[1], logicalType.quote);
             column = String.join(EMPTY, column, "[", key, "]");
@@ -72,12 +71,22 @@ public class SqlColumn extends SqlNode {
         return String.join(EMPTY, tableIdent, DOT, column);
     }
 
+    public DataType getMapKeyDataType(SqlContext context) {
+        Map<String, ColumnExtra> columnExtraMap = context.getTableColumnMap().get(qualifier);
+        ColumnExtra columnExtra = columnExtraMap.get(names[0]);
+        DataType dataType = columnExtra.getDataType();
+        if (!(dataType instanceof MapDataType)) {
+            throw new RuntimeException("DataType of SqlColumn is not Map.");
+        }
+        return ((MapDataType) dataType).getKeyDataType();
+    }
+
     public DataType getDataType(SqlContext context) {
         Map<String, ColumnExtra> columnExtraMap = context.getTableColumnMap().get(qualifier);
         ColumnExtra columnExtra = columnExtraMap.get(names[0]);
         DataType dataType = columnExtra.getDataType();
         if (dataType instanceof MapDataType) {
-            return ((MapDataType) dataType).getKeyDataType();
+            return ((MapDataType) dataType).getValueDataType();
         } else {
             return dataType;
         }

@@ -27,7 +27,7 @@ public class SqlParserTest {
                         .addColumn(new ColumnExtra("id", 1L, "Int64"))
                         .addColumn(new ColumnExtra("type", 1L, "String"))
                         .addColumn(new ColumnExtra("favor", 1L, "Array(String)"))
-                        .addColumn(new ColumnExtra("props", 1L, "Map(String, String)"))
+                        .addColumn(new ColumnExtra("props", 1L, "Map(String, UInt64)"))
                         .addColumn(new ColumnExtra("id", 2L, "Int64"))
                         .addColumn(new ColumnExtra("user_id", 2L, "Int64"))
                         .addColumn(new ColumnExtra("goods", 2L, "Map(String, UInt32)"))

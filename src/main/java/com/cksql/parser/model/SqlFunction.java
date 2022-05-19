@@ -3,10 +3,12 @@ package com.cksql.parser.model;
 import com.cksql.parser.common.LiteralRelated;
 import com.cksql.parser.common.SqlContext;
 import com.cksql.parser.snippet.BuildInFunction;
+import com.cksql.parser.type.DataType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,22 +64,33 @@ public class SqlFunction extends SqlNode {
                         });
     }
 
-    // TODO: currently, only support extract dataType from column.
     @Override
     public String toSQL(SqlContext context, Object... relation) {
         BuildInFunction function = BuildInFunction.of(name);
-        SqlColumn sqlColumn =
-                operands.stream()
-                        .filter(sqlNode -> sqlNode instanceof SqlColumn)
-                        .map(sqlNode -> sqlNode.unwrap(SqlColumn.class))
-                        .findFirst()
-                        .orElseThrow(() -> new RuntimeException("SqlColumn not found"));
-        LiteralRelated related = new LiteralRelated(sqlColumn.getDataType(context), true);
         List<String> operandList = new ArrayList<>();
-        for (SqlNode sqlNode : operands) {
-            operandList.add(sqlNode.toSQL(context, related));
-        }
+        if (CollectionUtils.isNotEmpty(operands)) {
+            DataType dataType = null;
+            for (SqlNode sqlNode : operands) {
+                if (sqlNode instanceof SqlColumn) {
+                    SqlColumn sqlColumn = sqlNode.unwrap(SqlColumn.class);
+                    dataType = sqlColumn.getDataType(context);
+                    break;
+                } else if (sqlNode instanceof SqlFunction) {
+                    String name = sqlNode.unwrap(SqlFunction.class).getName();
+                    dataType = BuildInFunction.of(name).resultType;
+                    break;
+                }
+            }
 
+            if (dataType == null) {
+                throw new RuntimeException("Data type is not found");
+            }
+
+            LiteralRelated related = new LiteralRelated(dataType, true);
+            for (SqlNode sqlNode : operands) {
+                operandList.add(sqlNode.toSQL(context, related));
+            }
+        }
         return String.format(function.format, operandList.toArray());
     }
 }
