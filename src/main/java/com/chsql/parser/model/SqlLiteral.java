@@ -1,8 +1,8 @@
 package com.chsql.parser.model;
 
-import com.chsql.parser.type.LogicalType;
 import com.chsql.parser.common.LiteralRelated;
 import com.chsql.parser.common.SqlContext;
+import com.chsql.parser.type.LogicalType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

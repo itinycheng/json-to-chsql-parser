@@ -22,7 +22,11 @@ public enum BuildInFunction {
     /** available for all types. */
     COUNT("Count", "count(%s)", FunctionType.AGG_FUNC, new BasicDataType(LogicalType.INT)),
 
-    UNIQ_COUNT("UniqCount", "count(distinct %s)", FunctionType.AGG_FUNC, new BasicDataType(LogicalType.INT)),
+    UNIQ_COUNT(
+            "UniqCount",
+            "count(distinct %s)",
+            FunctionType.AGG_FUNC,
+            new BasicDataType(LogicalType.INT)),
 
     // ------------------------------------------------------------------------
     //  common function
@@ -34,16 +38,32 @@ public enum BuildInFunction {
             FunctionType.COM_FUNC,
             new BasicDataType(LogicalType.DATETIME)),
 
-    TO_YYYYMM("toYYYYMM", "toYYYYMM(%s)", FunctionType.COM_FUNC, new BasicDataType(LogicalType.INT)),
+    TO_YYYYMM(
+            "toYYYYMM", "toYYYYMM(%s)", FunctionType.COM_FUNC, new BasicDataType(LogicalType.INT)),
 
-    TO_YYYYMMDD("toYYYYMMDD", "toYYYYMMDD(%s)", FunctionType.COM_FUNC, new BasicDataType(LogicalType.INT)),
+    TO_YYYYMMDD(
+            "toYYYYMMDD",
+            "toYYYYMMDD(%s)",
+            FunctionType.COM_FUNC,
+            new BasicDataType(LogicalType.INT)),
 
-    TO_YYYYMMDDHHMMSS("toYYYYMMDDhhmmss", "toYYYYMMDDhhmmss(%s)", FunctionType.COM_FUNC, new BasicDataType(LogicalType.INT)),
+    TO_YYYYMMDDHHMMSS(
+            "toYYYYMMDDhhmmss",
+            "toYYYYMMDDhhmmss(%s)",
+            FunctionType.COM_FUNC,
+            new BasicDataType(LogicalType.INT)),
 
-    ROW_NUM("rowNum", "rowNumberInAllBlocks() as row_num", FunctionType.COM_FUNC, new BasicDataType(LogicalType.INT)),
+    ROW_NUM(
+            "rowNum",
+            "rowNumberInAllBlocks() as row_num",
+            FunctionType.COM_FUNC,
+            new BasicDataType(LogicalType.INT)),
 
     FORMAT_DATE_TIME(
-            "formatDateTime", "formatDateTime(%s, %s)", FunctionType.COM_FUNC, new BasicDataType(LogicalType.DATETIME)),
+            "formatDateTime",
+            "formatDateTime(%s, %s)",
+            FunctionType.COM_FUNC,
+            new BasicDataType(LogicalType.DATETIME)),
 
     LENGTH("length", "length(%s)", FunctionType.COM_FUNC, new BasicDataType(LogicalType.INT));
 

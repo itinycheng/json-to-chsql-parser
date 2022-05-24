@@ -1,9 +1,9 @@
 package com.chsql.parser;
 
-import com.chsql.parser.model.SqlSelect;
 import com.chsql.parser.common.ColumnExtra;
 import com.chsql.parser.common.SqlContext;
 import com.chsql.parser.common.TableExtra;
+import com.chsql.parser.model.SqlSelect;
 import com.chsql.parser.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +36,12 @@ public class SqlParserTest {
 
     @Test
     public void testWhere() {
-        parseToSQL("where.json");
+        parseToSQL("group_by_where_limit.json");
+    }
+
+    @Test
+    public void testTopNAndOther() {
+        parseToSQL("topn_and_other.json");
     }
 
     private void parseToSQL(String jsonFile) {

@@ -1,10 +1,10 @@
 package com.chsql.parser.model;
 
+import com.chsql.parser.common.ColumnExtra;
+import com.chsql.parser.common.SqlContext;
 import com.chsql.parser.type.DataType;
 import com.chsql.parser.type.LogicalType;
 import com.chsql.parser.type.MapDataType;
-import com.chsql.parser.common.ColumnExtra;
-import com.chsql.parser.common.SqlContext;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

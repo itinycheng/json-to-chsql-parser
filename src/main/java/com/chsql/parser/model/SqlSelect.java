@@ -12,6 +12,7 @@ import java.util.List;
 import static com.chsql.parser.common.Constant.AS;
 import static com.chsql.parser.common.Constant.BRACKET_LEFT;
 import static com.chsql.parser.common.Constant.COMMA;
+import static com.chsql.parser.common.Constant.EMPTY;
 import static com.chsql.parser.common.Constant.SPACE;
 
 /** sql select. */
@@ -37,12 +38,25 @@ public class SqlSelect {
         String from = fromSQL(context);
         String where = whereSQL(context);
         String groupBy = groupBySQL(context);
-        String orderBy = this.orderBy.toSQL(context);
-        return String.join(SPACE, select, from, where, groupBy, orderBy);
+        String orderBy = orderBySQL(context);
+        String baseSql = String.join(SPACE, select, from, where, groupBy, orderBy);
+        return limit != null ? limit.toSQL(context, baseSql) : baseSql;
+    }
+
+    private String orderBySQL(SqlContext context) {
+        if (orderBy == null) {
+            return EMPTY;
+        }
+
+        return orderBy.toSQL(context);
     }
 
     private String whereSQL(SqlContext context) {
-        String sql = this.where.toSQL(context);
+        if (where == null) {
+            return EMPTY;
+        }
+
+        String sql = where.toSQL(context);
         if (sql.startsWith(BRACKET_LEFT)) {
             sql = sql.substring(1, sql.length() - 1);
         }

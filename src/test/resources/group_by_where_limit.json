@@ -1,0 +1,123 @@
+{
+  "select": [
+    {
+      "type": "function",
+      "name": "uniqCount",
+      "operands": [
+        {
+          "type": "column",
+          "qualifier": "1",
+          "names": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "column",
+      "qualifier": "1",
+      "names": [
+        "type"
+      ]
+    }
+  ],
+  "where": {
+    "type": "composite",
+    "relation": "AND",
+    "conditions": [
+      {
+        "type": "simple",
+        "operator": "GT",
+        "operands": [
+          {
+            "type": "column",
+            "qualifier": "1",
+            "names": [
+              "id"
+            ]
+          },
+          {
+            "type": "literal",
+            "values": [
+              "0"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "composite",
+        "relation": "OR",
+        "conditions": [
+          {
+            "type": "simple",
+            "operator": "EQ",
+            "operands": [
+              {
+                "type": "function",
+                "name": "length",
+                "operands": [
+                  {
+                    "type": "column",
+                    "qualifier": "1",
+                    "names": [
+                      "favor"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "literal",
+                "values": [
+                  "0"
+                ]
+              }
+            ]
+          },
+          {
+            "type": "simple",
+            "operator": "BETWEEN",
+            "operands": [
+              {
+                "type": "column",
+                "qualifier": "1",
+                "names": [
+                  "props",
+                  "rate"
+                ]
+              },
+              {
+                "type": "literal",
+                "values": [
+                  "0"
+                ]
+              },
+              {
+                "type": "literal",
+                "values": [
+                  "100"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "orderBy": {
+    "type": "DESC",
+    "items": [
+      {
+        "type": "column",
+        "qualifier": "1",
+        "names": [
+          "type"
+        ]
+      }
+    ]
+  },
+  "limit": {
+    "hasOther": false,
+    "offset": 0,
+    "rowCount": 100
+  }
+}

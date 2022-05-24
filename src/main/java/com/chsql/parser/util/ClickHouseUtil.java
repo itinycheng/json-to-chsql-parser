@@ -1,10 +1,10 @@
 package com.chsql.parser.util;
 
+import com.chsql.parser.type.ArrayDataType;
 import com.chsql.parser.type.BasicDataType;
 import com.chsql.parser.type.DataType;
 import com.chsql.parser.type.LogicalType;
 import com.chsql.parser.type.MapDataType;
-import com.chsql.parser.type.ArrayDataType;
 import ru.yandex.clickhouse.response.ClickHouseColumnInfo;
 
 import java.util.TimeZone;

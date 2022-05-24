@@ -11,7 +11,7 @@ import static java.util.stream.Collectors.toMap;
 public enum LogicalType {
     ANY(EMPTY, "any"),
 
-    NUMBER(EMPTY, "UNDEFINED"),
+    NUMBER(EMPTY, "NUMBER"),
 
     STRING(SINGLE_QUOTE, "STRING"),
 

@@ -1,10 +1,10 @@
 package com.chsql.parser.model;
 
-import com.chsql.parser.type.DataType;
 import com.chsql.parser.common.LiteralRelated;
 import com.chsql.parser.common.SqlContext;
 import com.chsql.parser.snippet.BuildInFunction;
 import com.chsql.parser.snippet.SqlExpression;
+import com.chsql.parser.type.DataType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -64,7 +64,7 @@ public class SimpleSqlWhere extends SqlWhere {
             SqlNode value = entry.getValue();
             Object related = null;
             if (value instanceof SqlLiteral) {
-                related = new LiteralRelated(dataType, operator.enableQuoting);
+                related = new LiteralRelated(dataType, true);
             }
             String sql = value.toSQL(context, related);
             orderedMap.put(entry.getKey(), sql);
