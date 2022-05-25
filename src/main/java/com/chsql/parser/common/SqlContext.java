@@ -2,11 +2,14 @@ package com.chsql.parser.common;
 
 import com.chsql.parser.model.SqlSelect;
 import lombok.Data;
+import org.apache.commons.collections4.MapUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
-/** sql context info. */
+/**
+ * sql context info.
+ */
 @Data
 public class SqlContext implements Cloneable {
 
@@ -26,8 +29,7 @@ public class SqlContext implements Cloneable {
     }
 
     /**
-     * Builder for {@link SqlContext}. <br>
-     * TODO: throw exception if exists.
+     * Builder for {@link SqlContext}.
      */
     public static class Builder {
 
@@ -50,6 +52,9 @@ public class SqlContext implements Cloneable {
         }
 
         public SqlContext build() {
+            if (MapUtils.isEmpty(tableMap) || MapUtils.isEmpty(tableColumnMap)) {
+                throw new RuntimeException("Tables and columns can not be null");
+            }
             return new SqlContext(tableMap, tableColumnMap);
         }
     }
