@@ -1,11 +1,11 @@
 package com.chsql.parser.model;
 
+import com.chsql.parser.SqlValidator;
 import com.chsql.parser.common.SqlContext;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,10 +37,8 @@ public class SqlTable extends SqlNode {
     }
 
     @Override
-    public boolean isValid(SqlContext context) {
-        return StringUtils.isNoneBlank(id)
-                && StringUtils.isNoneBlank(database)
-                && StringUtils.isNoneBlank(name);
+    public boolean validate(SqlValidator validator, SqlContext context) {
+        return validator.validateTable(this);
     }
 
     public String toSQL(SqlContext sqlContext, Object... relation) {

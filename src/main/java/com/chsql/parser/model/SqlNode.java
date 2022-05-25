@@ -1,5 +1,6 @@
 package com.chsql.parser.model;
 
+import com.chsql.parser.SqlValidator;
 import com.chsql.parser.common.SqlContext;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -31,7 +32,7 @@ public abstract class SqlNode {
 
     public abstract List<SqlColumn> getColumns();
 
-    public abstract boolean isValid(SqlContext context);
+    public abstract boolean validate(SqlValidator validator, SqlContext context);
 
     public abstract String toSQL(SqlContext context, Object... relation);
 

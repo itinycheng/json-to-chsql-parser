@@ -1,5 +1,6 @@
 package com.chsql.parser.model;
 
+import com.chsql.parser.SqlValidator;
 import com.chsql.parser.common.LiteralRelated;
 import com.chsql.parser.common.SqlContext;
 import com.chsql.parser.snippet.BuildInFunction;
@@ -22,8 +23,7 @@ import java.util.stream.IntStream;
 import static com.chsql.parser.common.Constant.EMPTY;
 
 /**
- * Simple sql where. <br>
- * TODO: operands not null, 1=< length <= 2
+ * Simple sql where.
  */
 @Data
 @NoArgsConstructor
@@ -35,7 +35,11 @@ public class SimpleSqlWhere extends SqlWhere {
 
     private SqlNode[] operands;
 
-    // TODO: sqlFunction.
+    @Override
+    public boolean validate(SqlValidator validator, SqlContext context) {
+        return validator.validateSimpleWhere(this);
+    }
+
     @Override
     public String toSQL(SqlContext context) {
         if (ArrayUtils.isEmpty(operands)) {

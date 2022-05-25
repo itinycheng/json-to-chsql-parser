@@ -1,5 +1,6 @@
 package com.chsql.parser.model;
 
+import com.chsql.parser.SqlValidator;
 import com.chsql.parser.common.ColumnExtra;
 import com.chsql.parser.common.SqlContext;
 import com.chsql.parser.type.DataType;
@@ -44,17 +45,8 @@ public class SqlColumn extends SqlNode {
     }
 
     @Override
-    public boolean isValid(SqlContext context) {
-        if (names == null || names.length > 2) {
-            return false;
-        }
-
-        DataType dataType = getDataType(context);
-        if (dataType instanceof MapDataType) {
-            return names.length == 2;
-        }
-
-        return true;
+    public boolean validate(SqlValidator validator, SqlContext context) {
+        return validator.validateColumn(this, getDataType(context));
     }
 
     @Override

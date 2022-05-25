@@ -1,5 +1,6 @@
 package com.chsql.parser.model;
 
+import com.chsql.parser.SqlValidator;
 import com.chsql.parser.common.SqlContext;
 import com.chsql.parser.snippet.SqlExpression;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,11 @@ public class CompositeSqlWhere extends SqlWhere {
     private String relation;
 
     private List<SqlWhere> conditions;
+
+    @Override
+    public boolean validate(SqlValidator validator, SqlContext context) {
+        return validator.validateCompositeWhere(this);
+    }
 
     @Override
     public String toSQL(SqlContext context) {

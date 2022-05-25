@@ -1,5 +1,6 @@
 package com.chsql.parser.model;
 
+import com.chsql.parser.SqlValidator;
 import com.chsql.parser.common.LiteralRelated;
 import com.chsql.parser.common.SqlContext;
 import com.chsql.parser.type.LogicalType;
@@ -38,8 +39,8 @@ public class SqlLiteral extends SqlNode {
     }
 
     @Override
-    public boolean isValid(SqlContext context) {
-        return ArrayUtils.isNotEmpty(values);
+    public boolean validate(SqlValidator validator, SqlContext context) {
+        return validator.validateLiteral(this);
     }
 
     @Override

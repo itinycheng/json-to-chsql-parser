@@ -34,7 +34,7 @@ import static com.chsql.parser.snippet.SqlExpression.LT;
 import static com.chsql.parser.snippet.SqlExpression.NE;
 
 /** sql meta viewer. */
-public class SqlMetaExplorer {
+public class SqlExplorer {
 
     public static Map<LogicalType, List<SqlExpression>> getOperators() {
         Map<LogicalType, List<SqlExpression>> result = new HashMap<>();

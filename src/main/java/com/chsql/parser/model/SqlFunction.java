@@ -1,5 +1,6 @@
 package com.chsql.parser.model;
 
+import com.chsql.parser.SqlValidator;
 import com.chsql.parser.common.LiteralRelated;
 import com.chsql.parser.common.SqlContext;
 import com.chsql.parser.snippet.BuildInFunction;
@@ -48,20 +49,8 @@ public class SqlFunction extends SqlNode {
     }
 
     @Override
-    public boolean isValid(SqlContext context) {
-        if (operands == null || operands.size() == 0) {
-            return true;
-        }
-
-        return operands.stream()
-                .allMatch(
-                        sqlNode -> {
-                            if (sqlNode instanceof SqlTable) {
-                                return false;
-                            } else {
-                                return sqlNode.isValid(context);
-                            }
-                        });
+    public boolean validate(SqlValidator validator, SqlContext context) {
+        return validator.validateFunction(this);
     }
 
     @Override

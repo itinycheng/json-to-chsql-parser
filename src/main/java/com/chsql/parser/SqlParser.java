@@ -45,7 +45,9 @@ public class SqlParser {
         sqlSelect.setOrderBy(origin.getOrderBy());
         sqlSelect.setLimit(origin.getLimit());
 
-        validator.validate(sqlSelect);
+        if (!validator.validate(sqlSelect)) {
+            throw new RuntimeException("invalid json string.");
+        }
 
         SqlContext cloneContext = context.clone();
         cloneContext.setSqlSelect(sqlSelect);
