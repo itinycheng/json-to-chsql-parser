@@ -7,9 +7,7 @@ import org.apache.commons.collections4.MapUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * sql context info.
- */
+/** sql context info. */
 @Data
 public class SqlContext implements Cloneable {
 
@@ -28,9 +26,7 @@ public class SqlContext implements Cloneable {
         }
     }
 
-    /**
-     * Builder for {@link SqlContext}.
-     */
+    /** Builder for {@link SqlContext}. */
     public static class Builder {
 
         private final Map<String, TableExtra> tableMap = new HashMap<>();

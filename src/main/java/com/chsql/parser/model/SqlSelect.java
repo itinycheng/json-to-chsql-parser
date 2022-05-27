@@ -4,16 +4,20 @@ import com.chsql.parser.common.SqlContext;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static com.chsql.parser.common.Constant.AS;
 import static com.chsql.parser.common.Constant.BRACKET_LEFT;
 import static com.chsql.parser.common.Constant.COMMA;
 import static com.chsql.parser.common.Constant.EMPTY;
 import static com.chsql.parser.common.Constant.SPACE;
+import static com.chsql.parser.snippet.SqlExpression.EQ;
+import static java.util.stream.Collectors.joining;
 
 /** sql select. */
 @Data
@@ -52,16 +56,38 @@ public class SqlSelect {
     }
 
     private String whereSQL(SqlContext context) {
-        if (where == null) {
-            return EMPTY;
+        List<String> whereList = new ArrayList<>();
+        if (from.size() > 1) {
+            List<String> tableJoins = new ArrayList<>();
+            for (SqlTable sqlTable : from) {
+                tableJoins.add(sqlTable.sqlJoinKey());
+            }
+            String tableJoinSql =
+                    IntStream.range(0, tableJoins.size() - 1)
+                            .mapToObj(
+                                    idx ->
+                                            String.format(
+                                                    EQ.expression,
+                                                    tableJoins.get(idx),
+                                                    tableJoins.get(idx + 1)))
+                            .collect(joining(COMMA));
+            whereList.add(tableJoinSql);
         }
 
-        String sql = where.toSQL(context);
-        if (sql.startsWith(BRACKET_LEFT)) {
-            sql = sql.substring(1, sql.length() - 1);
+        if (where != null) {
+            String filterSql = where.toSQL(context);
+            if (filterSql.startsWith(BRACKET_LEFT)) {
+                filterSql =
+                        whereList.isEmpty()
+                                ? filterSql
+                                : filterSql.substring(1, filterSql.length() - 1);
+                whereList.add(filterSql);
+            }
         }
-        if (StringUtils.isNotEmpty(sql)) {
-            sql = "WHERE " + sql;
+
+        String sql = EMPTY;
+        if (CollectionUtils.isNotEmpty(whereList)) {
+            sql = "WHERE " + String.join(" AND ", whereList);
         }
         return sql;
     }

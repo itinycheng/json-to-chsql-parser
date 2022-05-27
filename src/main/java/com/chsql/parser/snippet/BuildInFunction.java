@@ -88,7 +88,7 @@ public enum BuildInFunction {
 
     public static BuildInFunction of(final String name) {
         return Arrays.stream(values())
-                .filter(expr -> expr.name.equalsIgnoreCase(name))
+                .filter(expr -> expr.name.equalsIgnoreCase(name) || expr.name().equals(name))
                 .findFirst()
                 .orElseThrow(
                         () ->

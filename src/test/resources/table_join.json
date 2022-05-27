@@ -1,0 +1,47 @@
+{
+  "select": [
+    {
+      "type": "function",
+      "name": "UNIQ_COUNT",
+      "operands": [
+        {
+          "type": "column",
+          "qualifier": "1",
+          "names": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "column",
+      "qualifier": "2",
+      "names": [
+        "goods", "name"
+      ]
+    }
+  ],
+  "orderBy": {
+    "type": "DESC",
+    "items": [
+      {
+        "type": "function",
+        "name": "UNIQ_COUNT",
+        "operands": [
+          {
+            "type": "column",
+            "qualifier": "1",
+            "names": [
+              "id"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "limit": {
+    "hasOther": false,
+    "offset": 0,
+    "rowCount": 10
+  }
+}

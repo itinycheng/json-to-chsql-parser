@@ -65,8 +65,9 @@ public class SqlParser {
             SqlTable sqlTable =
                     new SqlTable(
                             tableExtra.getId().toString(),
+                            tableExtra.getName(),
                             tableExtra.getDatabase(),
-                            tableExtra.getName());
+                            tableExtra.getJoinKey());
             tableMap.put(column.getQualifier(), sqlTable);
         }
         return new ArrayList<>(tableMap.values());

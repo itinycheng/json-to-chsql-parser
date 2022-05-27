@@ -22,16 +22,22 @@ public class SqlParserTest {
         classLoader = Thread.currentThread().getContextClassLoader();
         context =
                 new SqlContext.Builder()
-                        .addTable(new TableExtra(1L, "t_user", "ods"))
-                        .addTable(new TableExtra(2L, "t_order", "ups"))
+                        .addTable(new TableExtra(1L, "t_user", "ods", "id"))
+                        .addTable(new TableExtra(2L, "t_order", "ups", "user_id"))
                         .addColumn(new ColumnExtra("id", 1L, "Int64"))
                         .addColumn(new ColumnExtra("type", 1L, "String"))
+                        .addColumn(new ColumnExtra("region", 1L, "String"))
                         .addColumn(new ColumnExtra("favor", 1L, "Array(String)"))
                         .addColumn(new ColumnExtra("props", 1L, "Map(String, UInt64)"))
                         .addColumn(new ColumnExtra("id", 2L, "Int64"))
                         .addColumn(new ColumnExtra("user_id", 2L, "Int64"))
                         .addColumn(new ColumnExtra("goods", 2L, "Map(String, UInt32)"))
                         .build();
+    }
+
+    @Test
+    public void testGroupBy() {
+        parseToSQL("group_by_limit.json");
     }
 
     @Test
@@ -42,6 +48,11 @@ public class SqlParserTest {
     @Test
     public void testTopNAndOther() {
         parseToSQL("topn_and_other.json");
+    }
+
+    @Test
+    public void testTableJoin() {
+        parseToSQL("table_join.json");
     }
 
     private void parseToSQL(String jsonFile) {

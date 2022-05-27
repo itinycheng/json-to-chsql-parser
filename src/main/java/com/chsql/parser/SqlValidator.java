@@ -27,9 +27,7 @@ import java.util.List;
 import static com.chsql.parser.snippet.SqlExpression.ASC;
 import static com.chsql.parser.snippet.SqlExpression.DESC;
 
-/**
- * sql validate.
- */
+/** sql validate. */
 @AllArgsConstructor
 public class SqlValidator {
 

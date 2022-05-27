@@ -13,4 +13,6 @@ public class TableExtra {
     private final String name;
 
     private final String database;
+
+    private final String joinKey;
 }

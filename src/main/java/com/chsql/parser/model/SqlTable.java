@@ -22,9 +22,11 @@ public class SqlTable extends SqlNode {
 
     private String id;
 
+    private String name;
+
     private String database;
 
-    private String name;
+    private String joinKey;
 
     @Override
     public String ident() {
@@ -41,7 +43,12 @@ public class SqlTable extends SqlNode {
         return validator.validateTable(this);
     }
 
+    @Override
     public String toSQL(SqlContext sqlContext, Object... relation) {
         return String.join(DOT, database, name);
+    }
+
+    public String sqlJoinKey() {
+        return String.join(DOT, tableIdent(id), joinKey);
     }
 }

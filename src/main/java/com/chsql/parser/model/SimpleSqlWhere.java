@@ -22,9 +22,7 @@ import java.util.stream.IntStream;
 
 import static com.chsql.parser.common.Constant.EMPTY;
 
-/**
- * Simple sql where.
- */
+/** Simple sql where. */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
