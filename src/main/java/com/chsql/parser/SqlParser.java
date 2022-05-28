@@ -1,21 +1,24 @@
 package com.chsql.parser;
 
+import com.chsql.parser.common.DistributedEngineFull;
 import com.chsql.parser.common.Preconditions;
 import com.chsql.parser.common.SqlContext;
 import com.chsql.parser.common.TableExtra;
+import com.chsql.parser.enums.BuildInFunction;
 import com.chsql.parser.model.SqlColumn;
 import com.chsql.parser.model.SqlFunction;
 import com.chsql.parser.model.SqlNode;
 import com.chsql.parser.model.SqlSelect;
 import com.chsql.parser.model.SqlTable;
-import com.chsql.parser.snippet.BuildInFunction;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
+import static com.chsql.parser.enums.JoinType.CO_LOCATE;
 import static com.chsql.parser.util.SqlUtil.extractAllColumns;
 
 /**
@@ -55,21 +58,44 @@ public class SqlParser {
     }
 
     private List<SqlTable> extractFrom(SqlSelect origin, SqlContext sqlContext) {
-        Map<String, SqlTable> tableMap = new LinkedHashMap<>();
+        Map<String, SqlTable> tableMap = new TreeMap<>(Comparator.naturalOrder());
         Map<String, TableExtra> allTableMap = sqlContext.getTableMap();
         for (SqlColumn column : extractAllColumns(origin)) {
-            TableExtra tableExtra = allTableMap.get(column.getQualifier());
-            if (tableExtra == null) {
-                throw new RuntimeException("No table extra info found, column: " + column);
+            String tableId = column.getQualifier();
+            TableExtra tableExtra = allTableMap.get(tableId);
+
+            if (tableMap.containsKey(tableId)) {
+                continue;
             }
-            SqlTable sqlTable =
-                    new SqlTable(
-                            tableExtra.getId().toString(),
-                            tableExtra.getName(),
-                            tableExtra.getDatabase(),
-                            tableExtra.getJoinKey());
-            tableMap.put(column.getQualifier(), sqlTable);
+
+            if (tableExtra.getJoinType() == CO_LOCATE
+                    && tableExtra.isDistributed()
+                    && tableMap.values().stream().anyMatch(SqlTable::isDistributed)) {
+                DistributedEngineFull engine = tableExtra.getEngine();
+                String table = engine.getTable();
+                String database = engine.getDatabase();
+                tableMap.put(
+                        tableId,
+                        new SqlTable(
+                                tableId,
+                                table,
+                                database,
+                                tableExtra.getJoinKey(),
+                                tableExtra.isGlobalJoin(),
+                                false));
+            } else {
+                tableMap.put(
+                        tableId,
+                        new SqlTable(
+                                tableId,
+                                tableExtra.getName(),
+                                tableExtra.getDatabase(),
+                                tableExtra.getJoinKey(),
+                                tableExtra.isGlobalJoin(),
+                                tableExtra.isDistributed()));
+            }
         }
+
         return new ArrayList<>(tableMap.values());
     }
 

@@ -3,12 +3,16 @@ package com.chsql.parser;
 import com.chsql.parser.common.ColumnExtra;
 import com.chsql.parser.common.SqlContext;
 import com.chsql.parser.common.TableExtra;
+import com.chsql.parser.enums.JoinType;
 import com.chsql.parser.model.SqlSelect;
 import com.chsql.parser.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.TreeMap;
 
 /** sql parser test. */
 public class SqlParserTest {
@@ -22,8 +26,22 @@ public class SqlParserTest {
         classLoader = Thread.currentThread().getContextClassLoader();
         context =
                 new SqlContext.Builder()
-                        .addTable(new TableExtra(1L, "t_user", "ods", "id"))
-                        .addTable(new TableExtra(2L, "t_order", "ups", "user_id"))
+                        .addTable(
+                                new TableExtra(
+                                        1L,
+                                        "t_user",
+                                        "ods",
+                                        "ReplicatedReplacingMergeTree",
+                                        "id",
+                                        JoinType.COMMON))
+                        .addTable(
+                                new TableExtra(
+                                        2L,
+                                        "t_order",
+                                        "ups",
+                                        "ReplicatedReplacingMergeTree",
+                                        "user_id",
+                                        JoinType.COMMON))
                         .addColumn(new ColumnExtra("id", 1L, "Int64"))
                         .addColumn(new ColumnExtra("type", 1L, "String"))
                         .addColumn(new ColumnExtra("region", 1L, "String"))
@@ -53,6 +71,15 @@ public class SqlParserTest {
     @Test
     public void testTableJoin() {
         parseToSQL("table_join.json");
+    }
+
+    @Test
+    public void testTreeMap() {
+        Map<Integer, String> treeMap = new TreeMap<>(Comparator.naturalOrder());
+        treeMap.put(1, "a");
+        treeMap.put(3, "c");
+        treeMap.put(2, "b");
+        treeMap.values().forEach(System.out::println);
     }
 
     private void parseToSQL(String jsonFile) {

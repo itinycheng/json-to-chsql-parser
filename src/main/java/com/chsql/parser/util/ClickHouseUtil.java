@@ -1,5 +1,6 @@
 package com.chsql.parser.util;
 
+import com.chsql.parser.common.DistributedEngineFull;
 import com.chsql.parser.type.ArrayDataType;
 import com.chsql.parser.type.BasicDataType;
 import com.chsql.parser.type.DataType;
@@ -15,6 +16,22 @@ import java.util.regex.Pattern;
 public class ClickHouseUtil {
 
     private static final Pattern INTERNAL_TYPE_PATTERN = Pattern.compile(".*?\\((?<type>.*)\\)");
+
+    public static final Pattern DISTRIBUTED_ENGINE_FULL_PATTERN =
+            Pattern.compile(
+                    "Distributed\\((?<cluster>[a-zA-Z_][0-9a-zA-Z_]*),\\s*(?<database>[a-zA-Z_][0-9a-zA-Z_]*),\\s*(?<table>[a-zA-Z_][0-9a-zA-Z_]*)");
+
+    public static DistributedEngineFull parseEngineFull(String engineFull) {
+        Matcher matcher = DISTRIBUTED_ENGINE_FULL_PATTERN.matcher(engineFull.replace("'", ""));
+        if (matcher.find()) {
+            String cluster = matcher.group("cluster");
+            String database = matcher.group("database");
+            String table = matcher.group("table");
+            return DistributedEngineFull.of(cluster, database, table);
+        } else {
+            return null;
+        }
+    }
 
     /** Convert clickhouse data type to internal data type. */
     public static DataType toDataType(String columnName, String originType) {

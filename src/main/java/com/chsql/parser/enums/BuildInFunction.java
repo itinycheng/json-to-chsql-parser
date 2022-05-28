@@ -1,4 +1,4 @@
-package com.chsql.parser.snippet;
+package com.chsql.parser.enums;
 
 import com.chsql.parser.type.BasicDataType;
 import com.chsql.parser.type.DataType;

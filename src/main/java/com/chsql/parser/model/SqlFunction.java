@@ -3,7 +3,7 @@ package com.chsql.parser.model;
 import com.chsql.parser.SqlValidator;
 import com.chsql.parser.common.LiteralRelated;
 import com.chsql.parser.common.SqlContext;
-import com.chsql.parser.snippet.BuildInFunction;
+import com.chsql.parser.enums.BuildInFunction;
 import com.chsql.parser.type.DataType;
 import lombok.AllArgsConstructor;
 import lombok.Data;

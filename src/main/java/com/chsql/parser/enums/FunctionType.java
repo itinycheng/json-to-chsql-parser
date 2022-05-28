@@ -1,4 +1,4 @@
-package com.chsql.parser.snippet;
+package com.chsql.parser.enums;
 
 /** Function type. */
 public enum FunctionType {

@@ -1,7 +1,7 @@
 package com.chsql.parser.model;
 
 import com.chsql.parser.common.SqlContext;
-import com.chsql.parser.snippet.BuildInFunction;
+import com.chsql.parser.enums.BuildInFunction;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +12,7 @@ import java.util.List;
 import static com.chsql.parser.common.Constant.COMMA;
 import static com.chsql.parser.common.Constant.EMPTY;
 import static com.chsql.parser.common.Constant.TOP_N_AND_OTHER_SQL_FORMAT;
-import static com.chsql.parser.snippet.SqlExpression.LIMIT;
+import static com.chsql.parser.enums.SqlExpression.LIMIT;
 
 /** sql limit. */
 @Data

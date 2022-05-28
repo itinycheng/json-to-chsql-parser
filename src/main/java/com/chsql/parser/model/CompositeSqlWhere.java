@@ -2,7 +2,7 @@ package com.chsql.parser.model;
 
 import com.chsql.parser.SqlValidator;
 import com.chsql.parser.common.SqlContext;
-import com.chsql.parser.snippet.SqlExpression;
+import com.chsql.parser.enums.SqlExpression;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -10,7 +10,10 @@ import lombok.NoArgsConstructor;
 import java.util.Collections;
 import java.util.List;
 
+import static com.chsql.parser.common.Constant.AS;
 import static com.chsql.parser.common.Constant.DOT;
+import static com.chsql.parser.common.Constant.SPACE;
+import static com.chsql.parser.enums.SqlExpression.EQ;
 import static com.chsql.parser.util.SqlUtil.tableIdent;
 
 /** sql table. */
@@ -27,6 +30,10 @@ public class SqlTable extends SqlNode {
     private String database;
 
     private String joinKey;
+
+    private boolean globalJoin;
+
+    private boolean distributed;
 
     @Override
     public String ident() {
@@ -45,7 +52,15 @@ public class SqlTable extends SqlNode {
 
     @Override
     public String toSQL(SqlContext sqlContext, Object... relation) {
-        return String.join(DOT, database, name);
+        SqlTable prev = (SqlTable) relation[0];
+        String tableSql = String.join(SPACE, String.join(DOT, database, name), AS, ident());
+        if (prev == null) {
+            return tableSql;
+        }
+
+        String joinLiteral = globalJoin ? "GLOBAL JOIN" : "JOIN";
+        String joinCondition = String.format(EQ.expression, prev.sqlJoinKey(), sqlJoinKey());
+        return String.join(SPACE, joinLiteral, tableSql, "ON", joinCondition.trim());
     }
 
     public String sqlJoinKey() {

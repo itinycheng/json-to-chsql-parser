@@ -4,20 +4,16 @@ import com.chsql.parser.common.SqlContext;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import static com.chsql.parser.common.Constant.AS;
 import static com.chsql.parser.common.Constant.BRACKET_LEFT;
 import static com.chsql.parser.common.Constant.COMMA;
 import static com.chsql.parser.common.Constant.EMPTY;
 import static com.chsql.parser.common.Constant.SPACE;
-import static com.chsql.parser.snippet.SqlExpression.EQ;
-import static java.util.stream.Collectors.joining;
 
 /** sql select. */
 @Data
@@ -56,38 +52,16 @@ public class SqlSelect {
     }
 
     private String whereSQL(SqlContext context) {
-        List<String> whereList = new ArrayList<>();
-        if (from.size() > 1) {
-            List<String> tableJoins = new ArrayList<>();
-            for (SqlTable sqlTable : from) {
-                tableJoins.add(sqlTable.sqlJoinKey());
-            }
-            String tableJoinSql =
-                    IntStream.range(0, tableJoins.size() - 1)
-                            .mapToObj(
-                                    idx ->
-                                            String.format(
-                                                    EQ.expression,
-                                                    tableJoins.get(idx),
-                                                    tableJoins.get(idx + 1)))
-                            .collect(joining(COMMA));
-            whereList.add(tableJoinSql);
+        if (where == null) {
+            return EMPTY;
         }
 
-        if (where != null) {
-            String filterSql = where.toSQL(context);
-            if (filterSql.startsWith(BRACKET_LEFT)) {
-                filterSql =
-                        whereList.isEmpty()
-                                ? filterSql
-                                : filterSql.substring(1, filterSql.length() - 1);
-                whereList.add(filterSql);
-            }
+        String sql = where.toSQL(context);
+        if (sql.startsWith(BRACKET_LEFT)) {
+            sql = sql.substring(1, sql.length() - 1);
         }
-
-        String sql = EMPTY;
-        if (CollectionUtils.isNotEmpty(whereList)) {
-            sql = "WHERE " + String.join(" AND ", whereList);
+        if (StringUtils.isNotEmpty(sql)) {
+            sql = "WHERE " + sql;
         }
         return sql;
     }
@@ -107,12 +81,28 @@ public class SqlSelect {
     }
 
     private String fromSQL(SqlContext context) {
-        List<String> tableList = new ArrayList<>();
+        List<SqlTable> distributedTables = new ArrayList<>(from.size());
+        List<SqlTable> localTables = new ArrayList<>(from.size());
         for (SqlTable sqlTable : from) {
-            String sql = sqlTable.toSQL(context);
-            tableList.add(String.join(SPACE, sql, AS, sqlTable.ident()));
+            if (sqlTable.isDistributed()) {
+                distributedTables.add(sqlTable);
+            } else {
+                localTables.add(sqlTable);
+            }
         }
-        return "FROM " + String.join(COMMA, tableList);
+
+        List<SqlTable> fromTables = new ArrayList<>(from.size());
+        fromTables.addAll(distributedTables);
+        fromTables.addAll(localTables);
+
+        List<String> tableList = new ArrayList<>();
+        SqlTable prevTable = null;
+        for (SqlTable sqlTable : fromTables) {
+            String sql = sqlTable.toSQL(context, prevTable);
+            tableList.add(sql);
+            prevTable = sqlTable;
+        }
+        return "FROM " + String.join(SPACE, tableList);
     }
 
     private String groupBySQL(SqlContext context) {

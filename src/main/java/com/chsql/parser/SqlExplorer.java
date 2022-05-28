@@ -1,7 +1,7 @@
 package com.chsql.parser;
 
-import com.chsql.parser.snippet.BuildInFunction;
-import com.chsql.parser.snippet.SqlExpression;
+import com.chsql.parser.enums.BuildInFunction;
+import com.chsql.parser.enums.SqlExpression;
 import com.chsql.parser.type.LogicalType;
 
 import java.util.Arrays;
@@ -10,28 +10,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.chsql.parser.snippet.BuildInFunction.AVG;
-import static com.chsql.parser.snippet.BuildInFunction.COUNT;
-import static com.chsql.parser.snippet.BuildInFunction.FORMAT_DATE_TIME;
-import static com.chsql.parser.snippet.BuildInFunction.LENGTH;
-import static com.chsql.parser.snippet.BuildInFunction.MAX;
-import static com.chsql.parser.snippet.BuildInFunction.MILLS_TO_TIME;
-import static com.chsql.parser.snippet.BuildInFunction.MIN;
-import static com.chsql.parser.snippet.BuildInFunction.SUM;
-import static com.chsql.parser.snippet.BuildInFunction.TO_YYYYMM;
-import static com.chsql.parser.snippet.BuildInFunction.TO_YYYYMMDD;
-import static com.chsql.parser.snippet.BuildInFunction.TO_YYYYMMDDHHMMSS;
-import static com.chsql.parser.snippet.BuildInFunction.UNIQ_COUNT;
-import static com.chsql.parser.snippet.SqlExpression.BETWEEN;
-import static com.chsql.parser.snippet.SqlExpression.EQ;
-import static com.chsql.parser.snippet.SqlExpression.GE;
-import static com.chsql.parser.snippet.SqlExpression.GT;
-import static com.chsql.parser.snippet.SqlExpression.HAS_ALL;
-import static com.chsql.parser.snippet.SqlExpression.HAS_ANY;
-import static com.chsql.parser.snippet.SqlExpression.IS_NOT_NULL;
-import static com.chsql.parser.snippet.SqlExpression.LE;
-import static com.chsql.parser.snippet.SqlExpression.LT;
-import static com.chsql.parser.snippet.SqlExpression.NE;
+import static com.chsql.parser.enums.BuildInFunction.AVG;
+import static com.chsql.parser.enums.BuildInFunction.COUNT;
+import static com.chsql.parser.enums.BuildInFunction.FORMAT_DATE_TIME;
+import static com.chsql.parser.enums.BuildInFunction.LENGTH;
+import static com.chsql.parser.enums.BuildInFunction.MAX;
+import static com.chsql.parser.enums.BuildInFunction.MILLS_TO_TIME;
+import static com.chsql.parser.enums.BuildInFunction.MIN;
+import static com.chsql.parser.enums.BuildInFunction.SUM;
+import static com.chsql.parser.enums.BuildInFunction.TO_YYYYMM;
+import static com.chsql.parser.enums.BuildInFunction.TO_YYYYMMDD;
+import static com.chsql.parser.enums.BuildInFunction.TO_YYYYMMDDHHMMSS;
+import static com.chsql.parser.enums.BuildInFunction.UNIQ_COUNT;
+import static com.chsql.parser.enums.SqlExpression.BETWEEN;
+import static com.chsql.parser.enums.SqlExpression.EQ;
+import static com.chsql.parser.enums.SqlExpression.GE;
+import static com.chsql.parser.enums.SqlExpression.GT;
+import static com.chsql.parser.enums.SqlExpression.HAS_ALL;
+import static com.chsql.parser.enums.SqlExpression.HAS_ANY;
+import static com.chsql.parser.enums.SqlExpression.IS_NOT_NULL;
+import static com.chsql.parser.enums.SqlExpression.LE;
+import static com.chsql.parser.enums.SqlExpression.LT;
+import static com.chsql.parser.enums.SqlExpression.NE;
 
 /** sql meta viewer. */
 public class SqlExplorer {

@@ -1,6 +1,8 @@
 package com.chsql.parser;
 
 import com.chsql.parser.common.SqlContext;
+import com.chsql.parser.enums.BuildInFunction;
+import com.chsql.parser.enums.SqlExpression;
 import com.chsql.parser.model.CompositeSqlWhere;
 import com.chsql.parser.model.SimpleSqlWhere;
 import com.chsql.parser.model.SqlColumn;
@@ -12,8 +14,6 @@ import com.chsql.parser.model.SqlOrderBy;
 import com.chsql.parser.model.SqlSelect;
 import com.chsql.parser.model.SqlTable;
 import com.chsql.parser.model.SqlWhere;
-import com.chsql.parser.snippet.BuildInFunction;
-import com.chsql.parser.snippet.SqlExpression;
 import com.chsql.parser.type.DataType;
 import com.chsql.parser.type.MapDataType;
 import lombok.AllArgsConstructor;
@@ -24,8 +24,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.chsql.parser.snippet.SqlExpression.ASC;
-import static com.chsql.parser.snippet.SqlExpression.DESC;
+import static com.chsql.parser.enums.SqlExpression.ASC;
+import static com.chsql.parser.enums.SqlExpression.DESC;
 
 /** sql validate. */
 @AllArgsConstructor
