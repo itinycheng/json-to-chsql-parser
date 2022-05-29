@@ -53,6 +53,8 @@ public enum BuildInFunction {
             FunctionType.COM_FUNC,
             new BasicDataType(LogicalType.INT)),
 
+    TODAY("today", "today()", FunctionType.COM_FUNC, new BasicDataType(LogicalType.DATETIME)),
+
     ROW_NUM(
             "rowNum",
             "rowNumberInAllBlocks() as row_num",

@@ -47,6 +47,7 @@ public class SqlParserTest {
                         .addColumn(new ColumnExtra("region", 1L, "String"))
                         .addColumn(new ColumnExtra("favor", 1L, "Array(String)"))
                         .addColumn(new ColumnExtra("props", 1L, "Map(String, UInt64)"))
+                        .addColumn(new ColumnExtra("create_at", 1L, "DateTime64(3)"))
                         .addColumn(new ColumnExtra("id", 2L, "Int64"))
                         .addColumn(new ColumnExtra("user_id", 2L, "Int64"))
                         .addColumn(new ColumnExtra("goods", 2L, "Map(String, UInt32)"))
@@ -75,10 +76,10 @@ public class SqlParserTest {
 
     @Test
     public void testTreeMap() {
-        Map<Integer, String> treeMap = new TreeMap<>(Comparator.naturalOrder());
-        treeMap.put(1, "a");
-        treeMap.put(3, "c");
-        treeMap.put(2, "b");
+        Map<String, String> treeMap = new TreeMap<>(Comparator.naturalOrder());
+        treeMap.put("1", "a");
+        treeMap.put("3", "c");
+        treeMap.put("2", "b");
         treeMap.values().forEach(System.out::println);
     }
 

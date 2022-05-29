@@ -21,6 +21,24 @@
       ]
     }
   ],
+  "where": {
+    "type": "simple",
+    "operator": "GE",
+    "operands": [
+      {
+        "type": "column",
+        "qualifier": "1",
+        "names": [
+          "create_at"
+        ]
+      },
+      {
+        "type": "function",
+        "name": "today",
+        "operands": []
+      }
+    ]
+  },
   "orderBy": {
     "type": "DESC",
     "items": [
