@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static com.chsql.parser.common.Constant.BACK_TICK;
 import static com.chsql.parser.common.Constant.DOT;
 import static com.chsql.parser.common.Constant.EMPTY;
 import static com.chsql.parser.common.Constant.UNDERSCORE;
@@ -51,16 +52,16 @@ public class SqlColumn extends SqlNode {
 
     @Override
     public String toSQL(SqlContext context, Object... relation) {
-        String column = names[0];
+        String quotedColumn = String.join(EMPTY, BACK_TICK, names[0], BACK_TICK);
         if (names.length == 2) {
             DataType dataType = getMapKeyDataType(context);
             LogicalType logicalType = dataType.getLogicalType();
             String key = String.join(EMPTY, logicalType.quote, names[1], logicalType.quote);
-            column = String.join(EMPTY, column, "[", key, "]");
+            quotedColumn = String.join(EMPTY, quotedColumn, "[", key, "]");
         }
 
         String tableIdent = tableIdent(qualifier);
-        return String.join(EMPTY, tableIdent, DOT, column);
+        return String.join(EMPTY, tableIdent, DOT, quotedColumn);
     }
 
     public DataType getMapKeyDataType(SqlContext context) {

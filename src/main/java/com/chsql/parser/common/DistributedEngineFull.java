@@ -1,9 +1,9 @@
 package com.chsql.parser.common;
 
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 import static com.chsql.parser.common.Preconditions.checkArgument;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /** Engine info for distributed table. */
 @Data
@@ -30,9 +30,9 @@ public class DistributedEngineFull {
 
     private DistributedEngineFull(
             String cluster, String database, String table, String shardingKey, String policyName) {
-        checkArgument(StringUtils.isBlank(cluster), "cluster cannot be null or empty");
-        checkArgument(StringUtils.isBlank(database), "database cannot be null or empty");
-        checkArgument(StringUtils.isBlank(table), "table cannot be null or empty");
+        checkArgument(!isBlank(cluster), "cluster cannot be null or empty");
+        checkArgument(!isBlank(database), "database cannot be null or empty");
+        checkArgument(!isBlank(table), "table cannot be null or empty");
 
         this.cluster = cluster;
         this.database = database;
