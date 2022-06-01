@@ -11,6 +11,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.chsql.parser.common.Constant.AS;
+import static com.chsql.parser.common.Constant.BRACKET_LEFT;
+import static com.chsql.parser.common.Constant.BRACKET_RIGHT;
 import static com.chsql.parser.common.Constant.DOT;
 import static com.chsql.parser.common.Constant.SPACE;
 import static com.chsql.parser.enums.SqlExpression.EQ;
@@ -53,14 +55,18 @@ public class SqlTable extends SqlNode {
     @Override
     public String toSQL(SqlContext sqlContext, Object... relation) {
         SqlTable prev = (SqlTable) relation[0];
-        String tableSql = String.join(SPACE, String.join(DOT, database, name), AS, ident());
+        // main table.
         if (prev == null) {
-            return tableSql;
+            return String.join(SPACE, String.join(DOT, database, name), AS, ident());
         }
 
+        // Convert to a subQuery.
+        // ClickHouse will do more SQL optimization when executing SQL, such as filter push down.
+        String subQuery = String.join(SPACE, "SELECT * FROM", String.join(DOT, database, name));
+        String subQuerySql = String.join(SPACE, BRACKET_LEFT, subQuery, BRACKET_RIGHT, AS, ident());
         String joinLiteral = globalJoin ? "GLOBAL JOIN" : "JOIN";
         String joinCondition = String.format(EQ.expression, prev.sqlJoinKey(), sqlJoinKey());
-        return String.join(SPACE, joinLiteral, tableSql, "ON", joinCondition.trim());
+        return String.join(SPACE, joinLiteral, subQuerySql, "ON", joinCondition.trim());
     }
 
     public String sqlJoinKey() {
