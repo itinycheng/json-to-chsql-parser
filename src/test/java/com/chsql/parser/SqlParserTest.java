@@ -86,7 +86,12 @@ public class SqlParserTest {
     private void parseToSQL(String jsonFile) {
         File file = new File(classLoader.getResource(jsonFile).getFile());
         SqlSelect select = JsonUtil.toBean(file, SqlSelect.class);
-        String sql = new SqlParser(context).parseQuery(select);
+        String sql =
+                new SqlParser.Builder()
+                        .setContext(context)
+                        .setAllowSubQuery(false)
+                        .build()
+                        .parseQuery(select);
         System.out.println(sql);
     }
 }

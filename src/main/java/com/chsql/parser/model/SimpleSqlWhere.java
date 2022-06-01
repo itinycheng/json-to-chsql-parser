@@ -14,13 +14,16 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.chsql.parser.common.Constant.EMPTY;
+import static java.util.stream.Collectors.toList;
 
 /** Simple sql where. */
 @Data
@@ -74,6 +77,23 @@ public class SimpleSqlWhere extends SqlWhere {
 
         // replace variable in sql expression
         return String.format(operator.expression, orderedMap.values().toArray());
+    }
+
+    @Override
+    public SqlWhere extractWhere(SqlTable sqlTable) {
+        String tableId = sqlTable.getId();
+        List<SqlColumn> columns =
+                Arrays.stream(operands)
+                        .flatMap(sqlNode -> sqlNode.getColumns().stream())
+                        .collect(toList());
+
+        if (CollectionUtils.isNotEmpty(columns)
+                && columns.stream()
+                        .allMatch(sqlColumn -> tableId.equals(sqlColumn.getQualifier()))) {
+            return this;
+        } else {
+            return null;
+        }
     }
 
     private boolean containsSqlColumn(SqlNode sqlNode) {

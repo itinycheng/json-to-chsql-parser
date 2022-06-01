@@ -10,6 +10,7 @@ import com.chsql.parser.model.SqlFunction;
 import com.chsql.parser.model.SqlNode;
 import com.chsql.parser.model.SqlSelect;
 import com.chsql.parser.model.SqlTable;
+import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.ArrayList;
@@ -31,9 +32,12 @@ public class SqlParser {
 
     private final SqlValidator validator;
 
-    public SqlParser(SqlContext context) {
+    private final boolean allowSubQuery;
+
+    private SqlParser(SqlContext context, boolean allowSubQuery) {
         this.context = Preconditions.checkNotNull(context);
         this.validator = new SqlValidator(context);
+        this.allowSubQuery = allowSubQuery;
     }
 
     public String parseQuery(SqlSelect origin) {
@@ -54,7 +58,7 @@ public class SqlParser {
 
         SqlContext cloneContext = context.clone();
         cloneContext.setSqlSelect(sqlSelect);
-        return sqlSelect.toSQL(cloneContext);
+        return sqlSelect.toSQL(cloneContext, allowSubQuery);
     }
 
     private List<SqlTable> extractFrom(SqlSelect origin, SqlContext sqlContext) {
@@ -122,5 +126,31 @@ public class SqlParser {
         }
 
         return groupByList;
+    }
+
+    /** Builder for {@link SqlParser}. */
+    @Setter
+    public static class Builder {
+
+        private SqlContext context;
+
+        private boolean allowSubQuery;
+
+        public Builder setContext(SqlContext context) {
+            this.context = context;
+            return this;
+        }
+
+        public Builder setAllowSubQuery(boolean allowSubQuery) {
+            this.allowSubQuery = allowSubQuery;
+            return this;
+        }
+
+        public SqlParser build() {
+            if (context == null) {
+                throw new RuntimeException("Sql Context can not be null");
+            }
+            return new SqlParser(context, allowSubQuery);
+        }
     }
 }

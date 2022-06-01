@@ -34,6 +34,8 @@ public abstract class SqlWhere {
 
     public abstract String toSQL(SqlContext context);
 
+    public abstract SqlWhere extractWhere(SqlTable sqlTable);
+
     public List<SqlColumn> getAllColumns() {
         Set<SqlColumn> sqlNodeSet = new HashSet<>();
         if (this instanceof SimpleSqlWhere) {

@@ -51,4 +51,10 @@ public class CompositeSqlWhere extends SqlWhere {
         }
         return joined;
     }
+
+    // TODO
+    @Override
+    public SqlWhere extractWhere(SqlTable sqlTable) {
+        return null;
+    }
 }

@@ -33,9 +33,9 @@ public class SqlSelect {
 
     private SqlLimit limit;
 
-    public String toSQL(SqlContext context) {
+    public String toSQL(SqlContext context, boolean allowSubQuery) {
         String select = selectSQL(context);
-        String from = fromSQL(context);
+        String from = fromSQL(context, allowSubQuery);
         String where = whereSQL(context);
         String groupBy = groupBySQL(context);
         String orderBy = orderBySQL(context);
@@ -80,7 +80,7 @@ public class SqlSelect {
         return "SELECT " + String.join(COMMA, selectList);
     }
 
-    private String fromSQL(SqlContext context) {
+    private String fromSQL(SqlContext context, boolean allowSubQuery) {
         List<SqlTable> distributedTables = new ArrayList<>(from.size());
         List<SqlTable> localTables = new ArrayList<>(from.size());
         for (SqlTable sqlTable : from) {
@@ -98,7 +98,7 @@ public class SqlSelect {
         List<String> tableList = new ArrayList<>();
         SqlTable prevTable = null;
         for (SqlTable sqlTable : fromTables) {
-            String sql = sqlTable.toSQL(context, prevTable);
+            String sql = sqlTable.toSQL(context, prevTable, allowSubQuery);
             tableList.add(sql);
             prevTable = sqlTable;
         }
