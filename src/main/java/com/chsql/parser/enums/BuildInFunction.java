@@ -38,6 +38,14 @@ public enum BuildInFunction {
             FunctionType.COM_FUNC,
             new BasicDataType(LogicalType.DATETIME)),
 
+    TO_YEAR("toYear", "toYear(%s)", FunctionType.COM_FUNC, new BasicDataType(LogicalType.INT)),
+
+    TO_YEAR_WEEK(
+            "toYearWeek",
+            "toYearWeek(%s, 1)",
+            FunctionType.COM_FUNC,
+            new BasicDataType(LogicalType.INT)),
+
     TO_YYYYMM(
             "toYYYYMM", "toYYYYMM(%s)", FunctionType.COM_FUNC, new BasicDataType(LogicalType.INT)),
 

@@ -18,6 +18,8 @@ import static com.chsql.parser.enums.BuildInFunction.MAX;
 import static com.chsql.parser.enums.BuildInFunction.MILLS_TO_TIME;
 import static com.chsql.parser.enums.BuildInFunction.MIN;
 import static com.chsql.parser.enums.BuildInFunction.SUM;
+import static com.chsql.parser.enums.BuildInFunction.TO_YEAR;
+import static com.chsql.parser.enums.BuildInFunction.TO_YEAR_WEEK;
 import static com.chsql.parser.enums.BuildInFunction.TO_YYYYMM;
 import static com.chsql.parser.enums.BuildInFunction.TO_YYYYMMDD;
 import static com.chsql.parser.enums.BuildInFunction.TO_YYYYMMDDHHMMSS;
@@ -85,6 +87,8 @@ public class SqlExplorer {
                         MIN,
                         COUNT,
                         UNIQ_COUNT,
+                        TO_YEAR,
+                        TO_YEAR_WEEK,
                         TO_YYYYMM,
                         TO_YYYYMMDD,
                         TO_YYYYMMDDHHMMSS,

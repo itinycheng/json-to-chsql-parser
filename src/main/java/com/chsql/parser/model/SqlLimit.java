@@ -53,7 +53,7 @@ public class SqlLimit {
             if (function != null && function.isAggFunc()) {
                 otherColumns.add(String.format(BuildInFunction.SUM.format, sqlNode.ident()));
             } else {
-                otherColumns.add("'Other'");
+                otherColumns.add("null");
             }
         }
 
