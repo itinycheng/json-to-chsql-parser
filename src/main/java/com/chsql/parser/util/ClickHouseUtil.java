@@ -19,7 +19,7 @@ public class ClickHouseUtil {
 
     public static final Pattern DISTRIBUTED_ENGINE_FULL_PATTERN =
             Pattern.compile(
-                    "Distributed\\((?<cluster>[a-zA-Z_][0-9a-zA-Z_]*),\\s*(?<database>[a-zA-Z_][0-9a-zA-Z_]*),\\s*(?<table>[a-zA-Z_][0-9a-zA-Z_]*)");
+                    "Distributed\\((?<cluster>[a-zA-Z_]\\w*),\\s*(?<database>[a-zA-Z_]\\w*),\\s*(?<table>[a-zA-Z_]\\w*)");
 
     public static DistributedEngineFull parseEngineFull(String engineFull) {
         Matcher matcher = DISTRIBUTED_ENGINE_FULL_PATTERN.matcher(engineFull.replace("'", ""));

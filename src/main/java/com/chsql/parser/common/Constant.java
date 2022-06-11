@@ -25,9 +25,17 @@ public class Constant {
 
     public static final String BRACKET_RIGHT = ")";
 
+    public static final String ROW_NUM = "row_num";
+
     public static final String TOP_N_AND_OTHER_SQL_FORMAT =
-            "WITH with_table AS (SELECT rowNumberInAllBlocks() as row_num, * from (%s))"
-                    + " SELECT %s FROM with_table WHERE row_num < %s"
+            "WITH with_table AS (SELECT rowNumberInAllBlocks() as "
+                    + ROW_NUM
+                    + ", * from (%s))"
+                    + " SELECT %s FROM with_table WHERE "
+                    + ROW_NUM
+                    + " < %s"
                     + " UNION ALL"
-                    + " SELECT %s from with_table where row_num >= %s";
+                    + " SELECT %s from with_table where "
+                    + ROW_NUM
+                    + " >= %s";
 }

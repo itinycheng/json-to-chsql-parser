@@ -11,6 +11,7 @@ import java.util.List;
 
 import static com.chsql.parser.common.Constant.COMMA;
 import static com.chsql.parser.common.Constant.EMPTY;
+import static com.chsql.parser.common.Constant.ROW_NUM;
 import static com.chsql.parser.common.Constant.TOP_N_AND_OTHER_SQL_FORMAT;
 import static com.chsql.parser.enums.SqlExpression.LIMIT;
 
@@ -43,6 +44,8 @@ public class SqlLimit {
 
         List<String> originColumns = new ArrayList<>();
         List<String> otherColumns = new ArrayList<>();
+        originColumns.add(ROW_NUM);
+        otherColumns.add(String.valueOf(rowCount));
         for (SqlNode sqlNode : sqlSelect.getSelect()) {
             // origin
             originColumns.add(sqlNode.ident());
