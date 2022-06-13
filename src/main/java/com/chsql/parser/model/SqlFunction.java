@@ -14,6 +14,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.chsql.parser.common.Constant.DOLLAR_SYMBOL;
 import static com.chsql.parser.common.Constant.UNDERSCORE;
 
 /** SQL function. */
@@ -30,7 +31,13 @@ public class SqlFunction extends SqlNode {
     @Override
     public String ident() {
         List<String> subIdentList = new ArrayList<>(operands.size() + 1);
-        subIdentList.add(name.toLowerCase());
+        BuildInFunction function = BuildInFunction.of(name);
+        if (function.isAggFunc()) {
+            subIdentList.add(name.toLowerCase() + DOLLAR_SYMBOL);
+        } else {
+            subIdentList.add(name.toLowerCase());
+        }
+
         for (SqlNode sqlNode : operands) {
             if (sqlNode instanceof SqlColumn || sqlNode instanceof SqlFunction) {
                 subIdentList.add(sqlNode.ident());

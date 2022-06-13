@@ -2,6 +2,9 @@ package com.chsql.parser.model;
 
 import com.chsql.parser.common.SqlContext;
 import com.chsql.parser.enums.BuildInFunction;
+import com.chsql.parser.type.ArrayDataType;
+import com.chsql.parser.type.DataType;
+import com.chsql.parser.type.MapDataType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.chsql.parser.common.Constant.COMMA;
+import static com.chsql.parser.common.Constant.DEFAULT_ARRAY;
+import static com.chsql.parser.common.Constant.DEFAULT_MAP;
 import static com.chsql.parser.common.Constant.EMPTY;
+import static com.chsql.parser.common.Constant.NULL;
 import static com.chsql.parser.common.Constant.ROW_NUM;
 import static com.chsql.parser.common.Constant.TOP_N_AND_OTHER_SQL_FORMAT;
 import static com.chsql.parser.enums.SqlExpression.LIMIT;
@@ -56,18 +62,35 @@ public class SqlLimit {
             if (function != null && function.isAggFunc()) {
                 otherColumns.add(String.format(BuildInFunction.SUM.format, sqlNode.ident()));
             } else {
-                otherColumns.add("null");
+                otherColumns.add(defaultColumnValue(sqlNode, context));
             }
         }
 
-        String originColumnSql = String.join(COMMA, originColumns);
-        String otherColumnSql = String.join(COMMA, otherColumns);
         return String.format(
                 TOP_N_AND_OTHER_SQL_FORMAT,
                 baseSql,
-                originColumnSql,
+                String.join(COMMA, originColumns),
                 rowCount,
-                otherColumnSql,
+                String.join(COMMA, otherColumns),
                 rowCount);
+    }
+
+    private String defaultColumnValue(SqlNode sqlNode, SqlContext context) {
+        DataType columnType;
+        if (sqlNode instanceof SqlFunction) {
+            String functionName = sqlNode.unwrap(SqlFunction.class).getName();
+            BuildInFunction function = BuildInFunction.of(functionName);
+            columnType = function.resultType;
+        } else {
+            columnType = sqlNode.unwrap(SqlColumn.class).getDataType(context);
+        }
+
+        if (columnType instanceof ArrayDataType) {
+            return DEFAULT_ARRAY;
+        } else if (columnType instanceof MapDataType) {
+            return DEFAULT_MAP;
+        } else {
+            return NULL;
+        }
     }
 }

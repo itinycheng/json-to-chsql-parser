@@ -7,8 +7,6 @@ public class Constant {
 
     public static final String DOT = ".";
 
-    public static final String STAR = "*";
-
     public static final String SPACE = " ";
 
     public static final String EMPTY = "";
@@ -24,6 +22,14 @@ public class Constant {
     public static final String BRACKET_LEFT = "(";
 
     public static final String BRACKET_RIGHT = ")";
+
+    public static final String DEFAULT_ARRAY = "[]";
+
+    public static final String DEFAULT_MAP = "map()";
+
+    public static final String NULL = "null";
+
+    public static final String DOLLAR_SYMBOL = "$";
 
     public static final String ROW_NUM = "row_num";
 
