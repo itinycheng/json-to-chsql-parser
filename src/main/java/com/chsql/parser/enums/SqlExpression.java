@@ -27,7 +27,10 @@ public enum SqlExpression {
 
     /** Array only. */
     HAS_ANY(" hasAny(%s, [%s]) "),
-    HAS_ALL(" hasAll(%s, [%s]) ");
+    HAS_ALL(" hasAll(%s, [%s]) "),
+
+    MAP_CONTAINS(" mapContains(%s, %s) "),
+    ;
 
     public final String expression;
 

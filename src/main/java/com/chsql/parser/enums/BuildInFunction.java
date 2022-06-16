@@ -1,5 +1,6 @@
 package com.chsql.parser.enums;
 
+import com.chsql.parser.type.ArrayDataType;
 import com.chsql.parser.type.BasicDataType;
 import com.chsql.parser.type.DataType;
 import com.chsql.parser.type.LogicalType;
@@ -75,7 +76,18 @@ public enum BuildInFunction {
             FunctionType.COM_FUNC,
             new BasicDataType(LogicalType.DATETIME)),
 
-    LENGTH("length", "length(%s)", FunctionType.COM_FUNC, new BasicDataType(LogicalType.INT));
+    LENGTH("length", "length(%s)", FunctionType.COM_FUNC, new BasicDataType(LogicalType.INT)),
+
+    MAP_LENGTH(
+            "mapLength",
+            "length(mapKeys(%s))",
+            FunctionType.COM_FUNC,
+            new BasicDataType(LogicalType.INT)),
+
+    MAP_KEYS("mapKeys", "mapKeys(%s)", FunctionType.COM_FUNC, new ArrayDataType(null)),
+
+    MAP_VALUES("mapValues", "mapValues(%s)", FunctionType.COM_FUNC, new ArrayDataType(null)),
+    ;
 
     public final String name;
 

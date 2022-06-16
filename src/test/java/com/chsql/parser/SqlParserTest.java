@@ -29,19 +29,19 @@ public class SqlParserTest {
                         .addTable(
                                 new TableExtra(
                                         1L,
-                                        "t_user",
+                                        "t_user_all",
                                         "ods",
-                                        "ReplicatedReplacingMergeTree",
+                                        "Distributed('cluster_10shards_2replicas', 'ods', 't_user_local', javaHash(id))",
                                         "id",
-                                        JoinType.COMMON))
+                                        JoinType.CO_LOCATE))
                         .addTable(
                                 new TableExtra(
                                         2L,
-                                        "t_order",
-                                        "ups",
-                                        "ReplicatedReplacingMergeTree",
+                                        "t_order_all",
+                                        "ods",
+                                        "Distributed('cluster_10shards_2replicas', 'ods', 't_order_local', javaHash(id))",
                                         "user_id",
-                                        JoinType.COMMON))
+                                        JoinType.CO_LOCATE))
                         .addColumn(new ColumnExtra("id", 1L, "Int64"))
                         .addColumn(new ColumnExtra("type", 1L, "String"))
                         .addColumn(new ColumnExtra("region", 1L, "String"))

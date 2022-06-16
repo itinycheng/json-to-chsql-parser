@@ -1,24 +1,25 @@
 # json-to-chsql-parser
 
-> A plugin that can convert JSON to ClickHouse Query SQL.
+> A plugin that can convert JSON to ClickHouse Query SQL, support multi-table join query.   
+> Test Case: https://github.com/itinycheng/json-to-chsql-parser/blob/master/src/test/java/com/chsql/parser/SqlParserTest.java
 
 ## How To Use
 
 ```java
 SqlContext sqlContext=new SqlContext.Builder()
-        .addTable(new TableExtra(1L,"t_user","ods"))
+        .addTable(new TableExtra(1L,"t_user","ods","Distributed('cluster_10shards_2replicas', 'ods', 't_user_local', javaHash(id))","id",JoinType.CO_LOCATE))
         .addColumn(new ColumnExtra("id",1L,"Int64"))
         .addColumn(new ColumnExtra("type",1L,"String"))
         .addColumn(new ColumnExtra("favor",1L,"Array(String)"))
         .addColumn(new ColumnExtra("props",1L,"Map(String, UInt64)"))
         .build();
 
-File file=new File(classLoader.getResource(jsonFile).getFile());
-SqlSelect sqlSelect=JsonUtil.toBean(file,SqlSelect.class);
+        File file=new File(classLoader.getResource(jsonFile).getFile());
+        SqlSelect sqlSelect=JsonUtil.toBean(file,SqlSelect.class);
 
-SqlParser parser=new SqlParser(sqlContext);
-String sql=parser.parseQuery(sqlSelect);
-System.out.println(sql);
+        SqlParser parser=new SqlParser(sqlContext);
+        String sql=parser.parseQuery(sqlSelect);
+        System.out.println(sql);
 ```
 
 ## Demo

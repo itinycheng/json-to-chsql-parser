@@ -14,6 +14,9 @@ import static com.chsql.parser.enums.BuildInFunction.AVG;
 import static com.chsql.parser.enums.BuildInFunction.COUNT;
 import static com.chsql.parser.enums.BuildInFunction.FORMAT_DATE_TIME;
 import static com.chsql.parser.enums.BuildInFunction.LENGTH;
+import static com.chsql.parser.enums.BuildInFunction.MAP_KEYS;
+import static com.chsql.parser.enums.BuildInFunction.MAP_LENGTH;
+import static com.chsql.parser.enums.BuildInFunction.MAP_VALUES;
 import static com.chsql.parser.enums.BuildInFunction.MAX;
 import static com.chsql.parser.enums.BuildInFunction.MILLS_TO_TIME;
 import static com.chsql.parser.enums.BuildInFunction.MIN;
@@ -33,6 +36,7 @@ import static com.chsql.parser.enums.SqlExpression.HAS_ANY;
 import static com.chsql.parser.enums.SqlExpression.IS_NOT_NULL;
 import static com.chsql.parser.enums.SqlExpression.LE;
 import static com.chsql.parser.enums.SqlExpression.LT;
+import static com.chsql.parser.enums.SqlExpression.MAP_CONTAINS;
 import static com.chsql.parser.enums.SqlExpression.NE;
 
 /** sql meta viewer. */
@@ -58,6 +62,7 @@ public class SqlExplorer {
             case ARRAY:
                 return Arrays.asList(HAS_ANY, HAS_ALL);
             case MAP:
+                return Collections.singletonList(MAP_CONTAINS);
             case ANY:
             default:
                 return Collections.emptyList();
@@ -98,6 +103,7 @@ public class SqlExplorer {
             case ARRAY:
                 return Collections.singletonList(LENGTH);
             case MAP:
+                return Arrays.asList(MAP_LENGTH, MAP_KEYS, MAP_VALUES);
             case ANY:
             default:
                 return Collections.emptyList();
