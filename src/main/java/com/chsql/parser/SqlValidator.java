@@ -1,7 +1,6 @@
 package com.chsql.parser;
 
 import com.chsql.parser.common.SqlContext;
-import com.chsql.parser.enums.BuildInFunction;
 import com.chsql.parser.enums.SqlExpression;
 import com.chsql.parser.model.CompositeSqlWhere;
 import com.chsql.parser.model.SimpleSqlWhere;
@@ -117,7 +116,7 @@ public class SqlValidator {
     }
 
     public boolean validateFunction(SqlFunction sqlFunction) {
-        if (BuildInFunction.of(sqlFunction.getName()) == null) {
+        if (sqlFunction.getFunction() == null) {
             return false;
         }
 

@@ -57,8 +57,7 @@ public class SqlLimit {
             originColumns.add(sqlNode.ident());
             // other
             SqlFunction sqlFunction = sqlNode.unwrap(SqlFunction.class);
-            BuildInFunction function =
-                    sqlFunction != null ? BuildInFunction.of(sqlFunction.getName()) : null;
+            BuildInFunction function = sqlFunction != null ? sqlFunction.getFunction() : null;
             if (function != null && function.isAggFunc()) {
                 otherColumns.add(String.format(BuildInFunction.SUM.format, sqlNode.ident()));
             } else {
@@ -78,8 +77,8 @@ public class SqlLimit {
     private String defaultColumnValue(SqlNode sqlNode, SqlContext context) {
         DataType columnType;
         if (sqlNode instanceof SqlFunction) {
-            String functionName = sqlNode.unwrap(SqlFunction.class).getName();
-            BuildInFunction function = BuildInFunction.of(functionName);
+            SqlFunction sqlFunction = sqlNode.unwrap(SqlFunction.class);
+            BuildInFunction function = sqlFunction.getFunction();
             columnType = function.resultType;
         } else {
             columnType = sqlNode.unwrap(SqlColumn.class).getDataType(context);

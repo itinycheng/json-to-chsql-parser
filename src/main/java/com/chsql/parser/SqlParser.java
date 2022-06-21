@@ -109,7 +109,7 @@ public class SqlParser {
             }
 
             SqlFunction sqlFunction = sqlNode.unwrap(SqlFunction.class);
-            BuildInFunction buildIn = BuildInFunction.of(sqlFunction.getName());
+            BuildInFunction buildIn = sqlFunction.getFunction();
             if (buildIn.isAggFunc()) {
                 aggFuncList.add(sqlNode);
             } else {

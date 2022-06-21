@@ -85,7 +85,7 @@ public class SimpleSqlWhere extends SqlWhere {
             return ((SqlColumn) sqlNode).getDataType(context);
         } else if (sqlNode instanceof SqlFunction) {
             SqlFunction sqlFunction = sqlNode.unwrap(SqlFunction.class);
-            BuildInFunction function = BuildInFunction.of(sqlFunction.getName());
+            BuildInFunction function = sqlFunction.getFunction();
             return function.resultType;
         }
 

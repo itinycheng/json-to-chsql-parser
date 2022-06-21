@@ -5,6 +5,7 @@ import com.chsql.parser.common.LiteralRelated;
 import com.chsql.parser.common.SqlContext;
 import com.chsql.parser.enums.BuildInFunction;
 import com.chsql.parser.type.DataType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -28,10 +29,17 @@ public class SqlFunction extends SqlNode {
 
     private List<SqlNode> operands;
 
+    @JsonIgnore private BuildInFunction function;
+
+    public void setName(String name) {
+        this.name = name;
+        this.function = BuildInFunction.of(name);
+    }
+
     @Override
     public String ident() {
         List<String> subIdentList = new ArrayList<>(operands.size() + 1);
-        BuildInFunction function = BuildInFunction.of(name);
+        BuildInFunction function = getFunction();
         if (function.isAggFunc()) {
             subIdentList.add(name.toLowerCase() + DOLLAR_SYMBOL);
         } else {
@@ -62,7 +70,6 @@ public class SqlFunction extends SqlNode {
 
     @Override
     public String toSQL(SqlContext context, Object... relation) {
-        BuildInFunction function = BuildInFunction.of(name);
         List<String> operandList = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(operands)) {
             DataType dataType = null;
@@ -72,8 +79,9 @@ public class SqlFunction extends SqlNode {
                     dataType = sqlColumn.getDataType(context);
                     break;
                 } else if (sqlNode instanceof SqlFunction) {
-                    String name = sqlNode.unwrap(SqlFunction.class).getName();
-                    dataType = BuildInFunction.of(name).resultType;
+                    BuildInFunction buildInFunction =
+                            sqlNode.unwrap(SqlFunction.class).getFunction();
+                    dataType = buildInFunction.resultType;
                     break;
                 }
             }
