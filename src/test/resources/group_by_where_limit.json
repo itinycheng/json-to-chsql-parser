@@ -45,6 +45,26 @@
         ]
       },
       {
+        "type": "simple",
+        "operator": "HAS_ANY",
+        "operands": [
+          {
+            "type": "column",
+            "qualifier": "1",
+            "names": [
+              "favor"
+            ]
+          },
+          {
+            "type": "literal",
+            "values": [
+              "food",
+              "basketball"
+            ]
+          }
+        ]
+      },
+      {
         "type": "composite",
         "relation": "OR",
         "conditions": [

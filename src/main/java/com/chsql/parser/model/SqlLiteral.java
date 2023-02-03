@@ -3,7 +3,10 @@ package com.chsql.parser.model;
 import com.chsql.parser.SqlValidator;
 import com.chsql.parser.common.LiteralRelated;
 import com.chsql.parser.common.SqlContext;
+import com.chsql.parser.type.ArrayDataType;
+import com.chsql.parser.type.DataType;
 import com.chsql.parser.type.LogicalType;
+import com.chsql.parser.type.MapDataType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -50,7 +53,15 @@ public class SqlLiteral extends SqlNode {
         }
 
         LiteralRelated related = (LiteralRelated) relation[0];
-        LogicalType logicalType = related.getDataType().getLogicalType();
+        DataType elemDataType = related.getDataType();
+        if (elemDataType instanceof ArrayDataType) {
+            elemDataType = ((ArrayDataType) elemDataType).getElementDataType();
+        } else if (elemDataType instanceof MapDataType) {
+            // TODO: Only the function `mapContains()` supported, use KeyDataType is enough for now.
+            elemDataType = ((MapDataType) elemDataType).getKeyDataType();
+        }
+
+        LogicalType logicalType = elemDataType.getLogicalType();
         boolean quoteEnabled = related.isQuoteEnabled();
         return Arrays.stream(values)
                 .map(
